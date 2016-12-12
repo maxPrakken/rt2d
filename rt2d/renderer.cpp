@@ -3,6 +3,7 @@
  *
  * - Copyright 2015 Rik Teerling <rik@onandoffables.com>
  *   - Initial commit
+ *   - <meruiden> scaling of window
  */
 
 #include <rt2d/renderer.h>
@@ -98,7 +99,7 @@ int Renderer::init()
 		_uberShader =_resman.getShader(SPRITEVERTEXSHADER, SPRITEFRAGMENTSHADER);
 		printf("Renderer using uberShader\n");
 	}
-	
+
 	printf("Renderer::init() done\n");
 
 	return 0;
@@ -107,9 +108,12 @@ int Renderer::init()
 void Renderer::renderScene(Scene* scene)
 {
 
+	#ifndef __APPLE__
+	// Since apple does this automatically. This will cause some bugs where the viewport gets very small.
+
 	// Set the glViewport to the width and height of the window.
 	glViewport(0, 0, scene->input()->getWindowWidth(), scene->input()->getWindowHeight());
-
+	#endif
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
