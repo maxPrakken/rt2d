@@ -55,21 +55,22 @@ void MyScene::update(float deltaTime)
 	// ###############################################################
 	// Spacebar scales myentity
 	// ###############################################################
-	if (input()->getKeyDown( GLFW_KEY_SPACE )) {
-		//myentity->scale = Point(0.5f, 0.5f);
-	}
-	if (input()->getKeyUp( GLFW_KEY_SPACE )) {
-		//myentity->scale = Point(1.0f, 1.0f);
-	}
 
+	//basic movement right
 	if (input()->getKey(GLFW_KEY_D)) {
 		MyCoolGuy1->scale = Point(0.5f, 0.5f);
 		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
 	}
 
+	//basic movement left
 	if (input()->getKey(GLFW_KEY_A)) {
 		MyCoolGuy1->scale = Point(-0.5f, 0.5f);
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
+	}
+
+	//player gravity
+	if (!MyCoolGuy1->position.y >= 690) {
+		MyCoolGuy1->position += Point2(0, 100) * deltaTime;
 	}
 
 	//camera position relative to player
