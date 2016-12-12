@@ -14,10 +14,13 @@ MyScene::MyScene() : Scene()
 	// start the timer.
 	t.start();
 
+	//check if player has turned
 	turned = false;
 
+	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
-	MyCoolGuy1->position = Point2(SWIDTH / 1.5, SHEIGHT / 1.5);
+	MyCoolGuy1->position = Point2(200, 680);
+	MyCoolGuy1->scale = Point(0.5f, 0.5f);
 
 	backgroundTest = new Background();
 	backgroundTest->position = Point2(SWIDTH / 2, SHEIGHT / 2);
@@ -60,14 +63,17 @@ void MyScene::update(float deltaTime)
 	}
 
 	if (input()->getKey(GLFW_KEY_D)) {
-		MyCoolGuy1->scale = Point(1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(1000, 0) * deltaTime;
+		MyCoolGuy1->scale = Point(0.5f, 0.5f);
+		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
 	}
 
 	if (input()->getKey(GLFW_KEY_A)) {
-		MyCoolGuy1->scale = Point(-1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(-1000, 0) * deltaTime;
+		MyCoolGuy1->scale = Point(-0.5f, 0.5f);
+		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
 	}
+
+	//camera position relative to player
+	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
 
 
 	// ###############################################################
