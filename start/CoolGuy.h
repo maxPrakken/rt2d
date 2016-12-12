@@ -8,6 +8,6 @@ public:
 	CoolGuy();
 	virtual ~CoolGuy();
 	virtual void update(float deltaTime);
-	 
+	Vector2 velocity;
 };
 

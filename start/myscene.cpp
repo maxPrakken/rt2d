@@ -17,6 +17,8 @@ MyScene::MyScene() : Scene()
 	//check if player has turned
 	turned = false;
 
+	ground = 700;
+
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
 	MyCoolGuy1->position = Point2(200, 680);
@@ -68,9 +70,17 @@ void MyScene::update(float deltaTime)
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
 	}
 
+	//basic player jump
+	if (input()->getKeyDown(GLFW_KEY_SPACE)) {
+		if (MyCoolGuy1->position.y == ground) {
+			MyCoolGuy1->velocity = Vector2(0, -500);
+		}
+	}
+
 	//player gravity
-	if (!MyCoolGuy1->position.y >= 690) {
-		MyCoolGuy1->position += Point2(0, 100) * deltaTime;
+	if (MyCoolGuy1->position.y > ground) {
+		MyCoolGuy1->velocity.y = 0;
+		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
 	}
 
 	//camera position relative to player
