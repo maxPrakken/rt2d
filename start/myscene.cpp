@@ -79,6 +79,7 @@ void MyScene::update(float deltaTime)
 		}
 	}
 
+	//player shoot
 	if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
 		bulletspawn();
 	}
@@ -92,6 +93,7 @@ void MyScene::update(float deltaTime)
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
 
+	//make bullet come out of correct end of tank
 	if (turned) {
 		xoffset = -50;
 	}
@@ -100,11 +102,13 @@ void MyScene::update(float deltaTime)
 	}
 }
 
+//spawn bullets
 void MyScene::bulletspawn() {	
 		Bullet* bullet1 = new Bullet();
 		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 20);
 		bullet1->scale = Point(0.5f, 0.5f);
 		
+		//make bullets face correct direction
 		if (turned) {
 			bullet1->velocity = Vector2(-900, 0);
 			bullet1->scale = Point(-0.5f, -0.5f);
@@ -114,6 +118,7 @@ void MyScene::bulletspawn() {
 			bullet1->scale = Point(0.5f, 0.5f);
 		}
 
+		//add child to vector
 		this->addChild(bullet1);
 		bulletVector.push_back(bullet1);
 }
