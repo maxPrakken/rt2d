@@ -192,6 +192,8 @@ add_executable(start
 	start/myscene.h
 	start/CoolGuy.cpp
 	start/CoolGuy.h
+	start/bullet.cpp
+	start/bullet.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

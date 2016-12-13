@@ -1,9 +1,3 @@
-/**
- * This class describes MyScene behavior.
- *
- * Copyright 2015 Your Name <you@yourhost.com>
- */
-
 #include <fstream>
 #include <sstream>
 
@@ -54,10 +48,6 @@ void MyScene::update(float deltaTime)
 		this->stop();
 	}
 
-	// ###############################################################
-	// Spacebar scales myentity
-	// ###############################################################
-
 	//basic movement right
 	if (input()->getKey(GLFW_KEY_D)) {
 		MyCoolGuy1->scale = Point(0.5f, 0.5f);
@@ -71,13 +61,13 @@ void MyScene::update(float deltaTime)
 	}
 
 	//basic player jump
-	if (input()->getKeyDown(GLFW_KEY_SPACE)) {
+	if (input()->getKey(GLFW_KEY_SPACE)) {
 		if (MyCoolGuy1->position.y == ground) {
 			MyCoolGuy1->velocity = Vector2(0, -500);
 		}
 	}
 
-	//player gravity
+	//keep player on ground level
 	if (MyCoolGuy1->position.y > ground) {
 		MyCoolGuy1->velocity.y = 0;
 		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
@@ -85,14 +75,4 @@ void MyScene::update(float deltaTime)
 
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
-
-
-	// ###############################################################
-	// Rotate color
-	// ###############################################################
-	if (t.seconds() > 0.0333f) {
-		//RGBAColor color = myentity->sprite()->color;
-		//myentity->sprite()->color = Color::rotate(color, 0.01f);
-		t.start();
-	}
 }

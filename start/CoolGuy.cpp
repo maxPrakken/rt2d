@@ -12,10 +12,7 @@ CoolGuy::~CoolGuy()
 }
 void CoolGuy::update(float deltaTime)
 {
+	//player gravity
 	position += velocity * deltaTime;
 	velocity.y += 700 * deltaTime;
-	/*this->rotation += HALF_PI * deltaTime; // 90 deg/sec
-	if (this->rotation > TWO_PI) {
-		this->rotation -= TWO_PI;
-	}*/
 }
