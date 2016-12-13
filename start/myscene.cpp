@@ -38,8 +38,6 @@ MyScene::~MyScene()
 	}
 	bulletVector.clear();
 
-	
-
 	// deconstruct and delete the Tree
 	//this->removeChild(myentity);
 	this->removeChild(MyCoolGuy1);
@@ -99,6 +97,15 @@ void MyScene::update(float deltaTime)
 	}
 	else {
 		xoffset = 50;
+	}
+
+	//despawn bullets on hit ground
+	for (unsigned int i = 0; i < bulletVector.size(); i++) {
+		if (bulletVector[i]->position.y >= ground) {
+			this->removeChild(bulletVector[i]);
+			delete bulletVector[i];
+		}
+		bulletVector.clear();
 	}
 }
 
