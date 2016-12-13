@@ -10,5 +10,6 @@ public:
 	virtual void update(float deltaTime);
 
 	Vector2 velocity;
+	int gravity;
 };
 

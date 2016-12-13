@@ -1,14 +1,14 @@
-#ifndef BULLET_H
-#define BULLET_H
+#pragma once
+#include "entity.h"
 
-class Bullet
+class Bullet :
+	public Entity
 {
 public:
 	Bullet();
 	virtual ~Bullet();
+	virtual void update(float deltatime);
 
-private:
-
+	Vector2 velocity;
+	int gravity;
 };
-
-#endif

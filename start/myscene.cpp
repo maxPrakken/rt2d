@@ -18,9 +18,10 @@ MyScene::MyScene() : Scene()
 	MyCoolGuy1->position = Point2(200, 680);
 	MyCoolGuy1->scale = Point(0.5f, 0.5f);
 
+	//background initialise
 	backgroundTest = new Background();
 	backgroundTest->position = Point2(SWIDTH / 2, SHEIGHT / 2);
-
+	
 	// create the scene 'tree'
 	// add myentity to this Scene as a child. :))))
 	this->addChild(backgroundTest);
@@ -30,6 +31,15 @@ MyScene::MyScene() : Scene()
 
 MyScene::~MyScene()
 {
+	//delete bullets on close program
+	for (unsigned int i = 0; i < bulletVector.size(); i++) {
+		this->removeChild(bulletVector[i]);
+		delete bulletVector[i];
+	}
+	bulletVector.clear();
+
+	
+
 	// deconstruct and delete the Tree
 	//this->removeChild(myentity);
 	this->removeChild(MyCoolGuy1);
@@ -52,12 +62,14 @@ void MyScene::update(float deltaTime)
 	if (input()->getKey(GLFW_KEY_D)) {
 		MyCoolGuy1->scale = Point(0.5f, 0.5f);
 		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
+		turned = false;
 	}
 
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A)) {
 		MyCoolGuy1->scale = Point(-0.5f, 0.5f);
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
+		turned = true;
 	}
 
 	//basic player jump
@@ -65,6 +77,10 @@ void MyScene::update(float deltaTime)
 		if (MyCoolGuy1->position.y == ground) {
 			MyCoolGuy1->velocity = Vector2(0, -500);
 		}
+	}
+
+	if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		bulletspawn();
 	}
 
 	//keep player on ground level
@@ -75,4 +91,29 @@ void MyScene::update(float deltaTime)
 
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
+
+	if (turned) {
+		xoffset = -50;
+	}
+	else {
+		xoffset = 50;
+	}
+}
+
+void MyScene::bulletspawn() {	
+		Bullet* bullet1 = new Bullet();
+		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 20);
+		bullet1->scale = Point(0.5f, 0.5f);
+		
+		if (turned) {
+			bullet1->velocity = Vector2(-900, 0);
+			bullet1->scale = Point(-0.5f, -0.5f);
+		}
+		else {
+			bullet1->velocity = Vector2(900, 0);
+			bullet1->scale = Point(0.5f, 0.5f);
+		}
+
+		this->addChild(bullet1);
+		bulletVector.push_back(bullet1);
 }
