@@ -49,17 +49,6 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
-	//player idle animation
-	static int f = 0;
-	if (f > 4) { f = 0; }
-
-	MyCoolGuy1->sprite()->frame(f);
-	if (t.seconds() > 0.10f) {
-		
-		f++;
-		t.start();
-	}
-
 	// ###############################################################
 	// Escape key stops the Scene
 	// ###############################################################
@@ -82,10 +71,8 @@ void MyScene::update(float deltaTime)
 	}
 
 	//basic player jump
-	if (input()->getKey(GLFW_KEY_SPACE)) {
-		if (MyCoolGuy1->position.y == ground) {
+	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground) {
 			MyCoolGuy1->velocity = Vector2(0, -500);
-		}
 	}
 
 	//player shoot
@@ -104,10 +91,10 @@ void MyScene::update(float deltaTime)
 
 	//make bullet come out of correct end of tank
 	if (turned) {
-		xoffset = -50;
+		xoffset = -85;
 	}
 	else {
-		xoffset = 50;
+		xoffset = 85;
 	}
 
 	//despawn bullets on hit ground
@@ -118,12 +105,30 @@ void MyScene::update(float deltaTime)
 		}
 		bulletVector.clear();
 	}
+	
+	animationController();
+}
+
+void MyScene::animationController() {
+	//make this further asap
+	if (input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D)) {
+
+		static int f = 4;
+		if (f > 7) { f = 4; }
+		
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
 }
 
 //spawn bullets
 void MyScene::bulletspawn() {	
 		Bullet* bullet1 = new Bullet();
-		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 20);
+		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 30);
 		bullet1->scale = Point(0.5f, 0.5f);
 		
 		//make bullets face correct direction

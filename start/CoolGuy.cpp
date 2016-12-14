@@ -2,9 +2,10 @@
 
 CoolGuy::CoolGuy() : Entity()
 {
-	addSpriteSheet("assets/player_idle_v2.tga", 2, 2);;
-	velocity = Vector2(0, 0);
+	//addSprite("assets/player.tga");
+	addSpriteSheet("assets/player_animations_full.tga", 2, 6);
 
+	velocity = Vector2(0, 0);
 	gravity = 700;
 }
 

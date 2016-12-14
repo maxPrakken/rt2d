@@ -28,13 +28,15 @@ public:
 	virtual ~MyScene();
 
 	int ground;
-
+	int f;
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
 	/// @return void
 	virtual void update(float deltaTime);
 
 	void MyScene::bulletspawn();
+
+	void MyScene::animationController();
 
 	bool turned;
 

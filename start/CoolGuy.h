@@ -11,5 +11,8 @@ public:
 
 	Vector2 velocity;
 	int gravity;
+
+	int spriteS;
+
 };
 
