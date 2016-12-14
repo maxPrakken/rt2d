@@ -124,6 +124,28 @@ void Scene01::update(float deltaTime)
 	animated_entity->rotation += 22.5 * DEG_TO_RAD * deltaTime;
 	if (animated_entity->rotation > -TWO_PI) { animated_entity->rotation -= TWO_PI; }
 
+
+	/*
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	*/
 	static int f = 0;
 	if (f > 15) { f = 0; }
 

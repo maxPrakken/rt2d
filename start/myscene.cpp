@@ -49,6 +49,17 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
+	//player idle animation
+	static int f = 0;
+	if (f > 4) { f = 0; }
+
+	MyCoolGuy1->sprite()->frame(f);
+	if (t.seconds() > 0.10f) {
+		
+		f++;
+		t.start();
+	}
+
 	// ###############################################################
 	// Escape key stops the Scene
 	// ###############################################################
