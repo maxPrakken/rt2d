@@ -11,6 +11,7 @@ MyScene::MyScene() : Scene()
 	//check if player has turned
 	turned = false;
 
+	//sets ground level
 	ground = 700;
 
 	//player initialising and attributes
@@ -110,12 +111,34 @@ void MyScene::update(float deltaTime)
 }
 
 void MyScene::animationController() {
-	//make this further asap
+	
 	if (input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D)) {
 
 		static int f = 4;
 		if (f > 7) { f = 4; }
 		
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
+
+	else if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		static int f = 8;
+		if (f > 8) { f = 8; }
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
+	else if(!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
+
+		static int f = 0;
+		if (f > 3) { f = 0; }
 		MyCoolGuy1->sprite()->frame(f);
 		if (t.seconds() > 0.10f) {
 
