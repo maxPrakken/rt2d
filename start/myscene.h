@@ -40,6 +40,9 @@ public:
 
 	bool turned;
 
+	bool isFiring;
+	bool isFiringD;
+
 	int xoffset;
 
 private:

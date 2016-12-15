@@ -111,7 +111,32 @@ void MyScene::update(float deltaTime)
 }
 
 void MyScene::animationController() {
-	
+
+	//keeps animation overlaying while driving and shooting at bay
+	if (isFiringD)
+	{
+		MyCoolGuy1->sprite()->frame(8);
+		if (t.seconds() > 0.2f){
+			isFiringD = false;
+			t.start();
+		}
+		else
+			return;
+	}
+
+	//keeps animation overlaying while idle and shooting at bay
+	if (isFiring)
+	{
+		MyCoolGuy1->sprite()->frame(8);
+		if (t.seconds() > 0.2f) {
+			isFiring = false;
+			t.start();
+		}
+		else
+			return;
+	}
+
+	//animation for driving
 	if (input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D)) {
 
 		static int f = 4;
@@ -125,7 +150,23 @@ void MyScene::animationController() {
 		}
 	}
 
+	//animation for driving and shooting
+	if (input()->getKey(GLFW_KEY_A) && input()->getMouseDown(GLFW_MOUSE_BUTTON_1) || input()->getKey(GLFW_KEY_D) && input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		isFiring = true;
+		static int f = 9;
+		if (f > 9) { f = 9; }
+
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
+	
+	//animation for firing;
 	else if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		isFiring = true;
 		static int f = 8;
 		if (f > 8) { f = 8; }
 		MyCoolGuy1->sprite()->frame(f);
@@ -135,6 +176,8 @@ void MyScene::animationController() {
 			t.start();
 		}
 	}
+
+	//animation for idle
 	else if(!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
 
 		static int f = 0;
