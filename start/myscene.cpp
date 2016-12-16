@@ -86,7 +86,7 @@ void MyScene::update(float deltaTime)
 		MyCoolGuy1->velocity.y = 0;
 		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
 	}
-
+	
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
 

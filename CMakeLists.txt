@@ -194,6 +194,8 @@ add_executable(start
 	start/CoolGuy.h
 	start/bullet.cpp
 	start/bullet.h
+	start/entitymain.cpp
+	start/entitymain.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

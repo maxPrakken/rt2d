@@ -1,6 +1,6 @@
 #include "CoolGuy.h"
 
-CoolGuy::CoolGuy() : Entity()
+CoolGuy::CoolGuy() : EntityMain()
 {
 	//addSprite("assets/player.tga");
 	addSpriteSheet("assets/player_animations_full.tga", 2, 6);

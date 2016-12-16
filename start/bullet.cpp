@@ -1,6 +1,6 @@
 #include "bullet.h" 
  
-Bullet::Bullet() : Entity(){
+Bullet::Bullet() : EntityMain(){
 	this->addSprite("assets/bullet.tga");
 
 	velocity = Vector2(0, 0);

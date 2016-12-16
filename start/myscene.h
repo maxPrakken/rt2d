@@ -1,11 +1,3 @@
-/**
- * Copyright 2015 Your Name <you@yourhost.com>
- *
- * @file myscene.h
- *
- * @brief description of MyScene behavior.
- */
-
 #ifndef MYSCENE_H
 #define MYSCENE_H
 
@@ -42,6 +34,7 @@ public:
 
 	bool isFiring;
 	bool isFiringD;
+	bool fireTimer;
 
 	int xoffset;
 
