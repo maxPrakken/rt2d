@@ -1,17 +1,17 @@
 /**
- * Copyright 2015 Your Name <you@yourhost.com>
+ * Copyright 2015 Your Name <maxprakken3@hotmail.nl>
  *
- * @brief Description of My Awesome Game.
+ * @brief Heavy Steel is a side scrolling shooter where you play as a tank.
  *
  * @file main.cpp
  *
- * @mainpage My Awesome Game
+ * @mainpage Heavy Steel
  *
- * @section intro Introduction
+ * @section About
  *
- * Detailed description of My Awesome Game.
- *
- * There's even a second paragraph.
+ * Heavy Steel is a side scrolling shooter where you play as a tank 
+ * and where your goal is to reach the end of the level.
+ * 
  */
 #include <rt2d/core.h>
 

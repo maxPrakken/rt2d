@@ -196,6 +196,8 @@ add_executable(start
 	start/bullet.h
 	start/entitymain.cpp
 	start/entitymain.h
+	start/platform.cpp
+	start/platform.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

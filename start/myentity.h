@@ -1,9 +1,9 @@
 /**
- * Copyright 2015 Your Name <you@yourhost.com>
+ * Copyright 2015 Your Name <maxprakken3@hotmail.nl>
  *
  * @file myentity.h
  *
- * @brief description of MyEntity behavior.
+ * @brief basic entity that has no collision.
  */
 
 #ifndef MYENTITY_H

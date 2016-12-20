@@ -14,10 +14,15 @@ MyScene::MyScene() : Scene()
 	//sets ground level
 	ground = 700;
 
+	//first platform initialising and stuffs
+	platform1 = new Platform();
+	platform1->position = Point2(500, 600);
+	//platform1->scale = Point(0.5f, 0.5f);
+
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
 	MyCoolGuy1->position = Point2(200, 680);
-	MyCoolGuy1->scale = Point(0.5f, 0.5f);
+	//MyCoolGuy1->scale = Point(0.5f, 0.5f);
 
 	//background initialise
 	backgroundTest = new Background();
@@ -27,6 +32,7 @@ MyScene::MyScene() : Scene()
 	// add myentity to this Scene as a child. :))))
 	this->addChild(backgroundTest);
 	this->addChild(MyCoolGuy1);
+	this->addChild(platform1);
 }
 
 
@@ -43,13 +49,23 @@ MyScene::~MyScene()
 	//this->removeChild(myentity);
 	this->removeChild(MyCoolGuy1);
 
+	this->removeChild(backgroundTest);
+
 	// delete myentity from the heap (there was a 'new' in the constructor)
 	//delete myentity;
 	delete MyCoolGuy1;
+	delete backgroundTest;
 }
 
 void MyScene::update(float deltaTime)
 {
+	if (MyCoolGuy1->isCollidingWith(platform1)) {
+		onP = true;
+		MyCoolGuy1->velocity.y = 0;
+		//MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, platform1->position.y);
+	}
+	else { onP = false; }
+
 	// ###############################################################
 	// Escape key stops the Scene
 	// ###############################################################
@@ -59,20 +75,21 @@ void MyScene::update(float deltaTime)
 
 	//basic movement right
 	if (input()->getKey(GLFW_KEY_D)) {
-		MyCoolGuy1->scale = Point(0.5f, 0.5f);
+		MyCoolGuy1->scale = Point(1.0f, 1.0f);
 		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
 		turned = false;
 	}
 
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A)) {
-		MyCoolGuy1->scale = Point(-0.5f, 0.5f);
+		MyCoolGuy1->scale = Point(-1.0f, 1.0f);
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
 		turned = true;
 	}
 
 	//basic player jump
-	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground) {
+	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground || 
+		(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
 			MyCoolGuy1->velocity = Vector2(0, -500);
 	}
 

@@ -1,3 +1,11 @@
+/**
+* Copyright 2015 Your Name <maxprakken3@hotmail.nl>
+*
+* @file myscene.h
+*
+* @brief scene file, this is where the level is build.
+*/
+
 #ifndef MYSCENE_H
 #define MYSCENE_H
 
@@ -9,6 +17,7 @@
 #include "CoolGuy.h"
 #include "background.h"
 #include "bullet.h"
+#include "platform.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
@@ -36,11 +45,15 @@ public:
 	bool isFiringD;
 	bool fireTimer;
 
+	bool onP;
+
 	int xoffset;
 
 private:
 	/// @brief the rotating square in the middle of the screen
 	//MyEntity* myentity;
+
+	Platform* platform1;
 
 	CoolGuy* MyCoolGuy1;
 
