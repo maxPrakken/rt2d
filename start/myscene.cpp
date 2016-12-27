@@ -62,7 +62,7 @@ void MyScene::update(float deltaTime)
 	if (MyCoolGuy1->isCollidingWith(platform1)) {
 		onP = true;
 		MyCoolGuy1->velocity.y = 0;
-		//MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, platform1->position.y);
+		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, platform1->position.y - 80);
 	}
 	else { onP = false; }
 
