@@ -18,6 +18,7 @@
 #include "background.h"
 #include "bullet.h"
 #include "platform.h"
+#include "enemies.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
@@ -39,6 +40,8 @@ public:
 
 	void MyScene::animationController();
 
+	void MyScene::enemyAnimationController();
+
 	bool turned;
 
 	bool isFiring;
@@ -49,6 +52,12 @@ public:
 
 	int xoffset;
 
+	bool Eidle;
+	bool Eshooting;
+	bool Edriving;
+	bool Edrivingshooting;
+	bool EisFiring;
+
 private:
 	/// @brief the rotating square in the middle of the screen
 	//MyEntity* myentity;
@@ -56,6 +65,8 @@ private:
 	Platform* platform1;
 
 	CoolGuy* MyCoolGuy1;
+
+	Enemies* testE;
 
 	Background* backgroundTest;
 

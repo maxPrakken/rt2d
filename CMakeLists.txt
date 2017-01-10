@@ -198,6 +198,8 @@ add_executable(start
 	start/entitymain.h
 	start/platform.cpp
 	start/platform.h
+	start/enemies.cpp
+	start/enemies.h
 )
 target_link_libraries(start
 	${ALL_LIBS}
