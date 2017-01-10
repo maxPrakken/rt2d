@@ -90,14 +90,14 @@ void MyScene::update(float deltaTime)
 
 	//basic movement right
 	if (input()->getKey(GLFW_KEY_D)) {
-		//MyCoolGuy1->scale = Point(1.0f, 1.0f);
+		MyCoolGuy1->scale = Point(1.0f, 1.0f);
 		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
 		turned = false;
 	}
 
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A)) {
-		//MyCoolGuy1->scale = Point(-1.0f, 1.0f);
+		MyCoolGuy1->scale = Point(-1.0f, 1.0f);
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
 		turned = true;
 	}
@@ -146,10 +146,22 @@ void MyScene::update(float deltaTime)
 	}
 	
 	animationController();
-	enemyAnimationController();
+	//enemyAnimationController();
 }
 
 void MyScene::animationController() {
+
+	//keeps animation overlaying while driving and shooting at bay
+	if (isFiringD)
+	{
+		MyCoolGuy1->sprite()->frame(8);
+		if (t.seconds() > 0.2f) {
+			isFiringD = false;
+			t.start();
+		}
+		else
+			return;
+	}
 
 	//keeps animation overlaying while idle and shooting at bay
 	if (isFiring)
@@ -216,6 +228,33 @@ void MyScene::animationController() {
 			t.start();
 		}
 	}
+	
+
+	//animation for firing;
+	else if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		isFiring = true;
+		static int f = 8;
+		if (f > 8) { f = 8; }
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
+
+	//animation for idle
+	else if (!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
+
+		static int f = 0;
+		if (f > 3) { f = 0; }
+		MyCoolGuy1->sprite()->frame(f);
+		if (t.seconds() > 0.10f) {
+
+			f++;
+			t.start();
+		}
+	}
 }
 
 void MyScene::enemyAnimationController() {
@@ -243,11 +282,11 @@ void MyScene::bulletspawn() {
 		//make bullets face correct direction
 		if (turned) {
 			bullet1->velocity = Vector2(-900, 0);
-			//bullet1->scale = Point(-0.5f, -0.5f);
+			bullet1->scale = Point(-0.5f, -0.5f);
 		}
 		else {
 			bullet1->velocity = Vector2(900, 0);
-			//bullet1->scale = Point(0.5f, 0.5f);
+			bullet1->scale = Point(0.5f, 0.5f);
 		}
 
 		//add child to vector
