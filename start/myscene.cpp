@@ -19,6 +19,9 @@ MyScene::MyScene() : Scene()
 	// start the timer.
 	t.start();
 
+	// start enemy animation timer
+	s.start();
+
 	//check if player has turned
 	turned = false;
 
@@ -72,8 +75,19 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
+	//basic movement that makes enemies chase you.
+	if (testE->detectionZone(MyCoolGuy1, 3)) {
+		
+	}
+	else {
+		if (testE->position.x > MyCoolGuy1->position.x) {
+			testE->position += Point2(-300, 0) * deltaTime;
+		}
+		else {
+			testE->position += Point2(300, 0) * deltaTime;
+		}
+	}
 
-	std::cout << testE->position << std::endl;
 	if (MyCoolGuy1->isCollidingWith(platform1)) {
 		onP = true;
 		MyCoolGuy1->velocity.y = 0;
@@ -178,82 +192,36 @@ void MyScene::animationController() {
 	//animation for driving
 	if (input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D)) {
 
-		static int f = 4;
-		if (f > 7) { f = 4; }
-
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(4, 7);
 	}
 
 	//animation for driving and shooting
 	if (input()->getKey(GLFW_KEY_A) && input()->getMouseDown(GLFW_MOUSE_BUTTON_1) || input()->getKey(GLFW_KEY_D) && input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
 		isFiring = true;
-		static int f = 9;
-		if (f > 9) { f = 9; }
-
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(9, 9);
 	}
 
 	//animation for firing;
 	else if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
 		isFiring = true;
-		static int f = 8;
-		if (f > 8) { f = 8; }
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(8, 8);
 	}
 
 	//animation for idle
 	else if (!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
-
-		static int f = 0;
-		if (f > 3) { f = 0; }
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(0, 3);
 	}
 	
 
 	//animation for firing;
 	else if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
 		isFiring = true;
-		static int f = 8;
-		if (f > 8) { f = 8; }
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(8, 8);
 	}
 
 	//animation for idle
 	else if (!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
-
-		static int f = 0;
-		if (f > 3) { f = 0; }
-		MyCoolGuy1->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
-
-			f++;
-			t.start();
-		}
+		animationHandler(0, 3);
 	}
 }
 
@@ -261,7 +229,6 @@ void MyScene::enemyAnimationController() {
 
 	//animation for idle
 	if (Eidle) {
-
 		static int f = 0;
 		if (f > 3) { f = 0; }
 		testE->sprite()->frame(f);
@@ -293,3 +260,19 @@ void MyScene::bulletspawn() {
 		this->addChild(bullet1);
 		bulletVector.push_back(bullet1);
 }
+
+//makes making animations for the player easier. 
+//int y is your starting point and int x is your ending point.
+void MyScene::animationHandler( int y, int x) {
+	static int f = y;
+	if (f > x) { f = y; }
+	MyCoolGuy1->sprite()->frame(f);
+	if (t.seconds() > 0.10f) {
+
+		f++;
+		t.start();
+	}
+}
+
+
+

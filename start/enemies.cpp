@@ -13,6 +13,15 @@ Enemies::~Enemies()
 
 }
 
+bool Enemies::detectionZone(Entity* other, int zonesize) {
+	if ((abs(this->position.x - other->position.x) * 2.0f < (sprite()->size.x * zonesize + other->sprite()->size.x)) &&
+		(abs(this->position.y - other->position.y) * 2.0f < (sprite()->size.y * zonesize + other->sprite()->size.y)))
+	{
+		return true;
+	}
+	return false;
+}
+
 void Enemies::update(float deltatime)
 {
 	//enemy gravity

@@ -24,6 +24,8 @@ public:
 	/// @brief amound of gravity on enemy in pixels per second.
 	int gravity;
 
+	bool detectionZone(Entity* other, int zonesize);
+
 private:
 
 };

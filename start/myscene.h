@@ -42,6 +42,8 @@ public:
 
 	void MyScene::enemyAnimationController();
 
+	void MyScene::animationHandler(int y, int x);
+
 	bool turned;
 
 	bool isFiring;
@@ -74,6 +76,8 @@ private:
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
+
+	Timer s;
 };
 
 #endif /* SCENE00_H */
