@@ -110,7 +110,13 @@ void MyScene::update(float deltaTime)
 	}
 
 	//basic movement left
-	if (input()->getKey(GLFW_KEY_A)) {
+	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+		MyCoolGuy1->scale = Point(1.0f, 1.0f);
+		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
+		turned = false;
+	}
+	
+	if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
 		MyCoolGuy1->scale = Point(-1.0f, 1.0f);
 		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
 		turned = true;
