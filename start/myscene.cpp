@@ -75,6 +75,7 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
+
 	//basic movement that makes enemies chase you.
 	if (testE->detectionZone(MyCoolGuy1, 3)) {
 		
@@ -112,7 +113,7 @@ void MyScene::update(float deltaTime)
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
 		MyCoolGuy1->scale = Point(1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
+		MyCoolGuy1->position += Point2(-200, 0) * deltaTime;
 		turned = false;
 	}
 	
@@ -157,16 +158,24 @@ void MyScene::update(float deltaTime)
 	}
 
 	//despawn bullets on hit ground
-	for (unsigned int i = 0; i < bulletVector.size(); i++) {
-		if (bulletVector[i]->position.y >= ground) {
-			this->removeChild(bulletVector[i]);
-			delete bulletVector[i];
+	std::vector<Bullet*>::iterator it = bulletVector.begin();
+	while (it != bulletVector.end())
+	{
+		if ((*it)->position.y >= ground) {
+			Bullet* b = (*it);
+			this->removeChild(b);
+			it = bulletVector.erase(it);
+			delete b;
 		}
-		bulletVector.clear();
+		else
+		{
+			it++;
+		}
 	}
 	
 	animationController();
-	//enemyAnimationController();
+	enemyAnimationController();
+	bulletTest();
 }
 
 void MyScene::animationController() {
@@ -238,10 +247,10 @@ void MyScene::enemyAnimationController() {
 		static int f = 0;
 		if (f > 3) { f = 0; }
 		testE->sprite()->frame(f);
-		if (t.seconds() > 0.10f) {
+		if (s.seconds() > 0.10f) {
 
 			f++;
-			t.start();
+			s.start();
 		}
 	}
 }
@@ -249,8 +258,8 @@ void MyScene::enemyAnimationController() {
 //spawn bullets
 void MyScene::bulletspawn() {	
 		Bullet* bullet1 = new Bullet();
-		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 30);
-		//bullet1->scale = Point(0.5f, 0.5f);
+		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 10);
+		bullet1->scale = Point(0.5f, 0.5f);
 		
 		//make bullets face correct direction
 		if (turned) {
@@ -277,6 +286,23 @@ void MyScene::animationHandler( int y, int x) {
 
 		f++;
 		t.start();
+	}
+}
+
+void MyScene::bulletTest() {
+	std::vector<Bullet*>::iterator it = bulletVector.begin();
+	while (it != bulletVector.end())
+	{
+		if ((*it)->isCollidingWith(testE)) {
+			Bullet* b = (*it);
+			this->removeChild(b);
+			it = bulletVector.erase(it);
+			delete b;
+		}
+		else
+		{
+			it++;
+		}
 	}
 }
 

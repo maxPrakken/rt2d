@@ -44,6 +44,8 @@ public:
 
 	void MyScene::animationHandler(int y, int x);
 
+	void MyScene::bulletTest();
+
 	bool turned;
 
 	bool isFiring;
