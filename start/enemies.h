@@ -9,12 +9,12 @@
 #pragma once
 #include "entitymain.h"
 
-class Enemies :
+class Enemy :
 	public EntityMain
 {
 public:
-	Enemies();
-	virtual ~Enemies();
+	Enemy();
+	virtual ~Enemy();
 
 	virtual void update(float deltatime);
 

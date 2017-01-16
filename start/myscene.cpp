@@ -6,10 +6,6 @@
 MyScene::MyScene() : Scene()
 {
 
-	//enemy spawn test, ///////////////// remove this
-	testE = new Enemies();
-	testE->position = Point2(500, 680);
-
 	//check what state the enemy is in
 	Eidle = true;
 	Eshooting = false;
@@ -47,8 +43,10 @@ MyScene::MyScene() : Scene()
 	this->addChild(backgroundTest);
 	this->addChild(MyCoolGuy1);
 	this->addChild(platform1);
+
+	//first enemy spawn out vector
+	enemySpawn(500.0f, 680.0f);
 	
-	this->addChild(testE);
 }
 
 
@@ -77,15 +75,17 @@ void MyScene::update(float deltaTime)
 {
 
 	//basic movement that makes enemies chase you.
-	if (testE->detectionZone(MyCoolGuy1, 3)) {
-		
-	}
-	else {
-		if (testE->position.x > MyCoolGuy1->position.x) {
-			testE->position += Point2(-300, 0) * deltaTime;
+	for (int i = 0; i < enemyVector.size(); i++) {
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 3)) {
+
 		}
 		else {
-			testE->position += Point2(300, 0) * deltaTime;
+			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
+				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
+			}
+			else {
+				enemyVector[i]->position += Point2(300, 0) * deltaTime;
+			}
 		}
 	}
 
@@ -141,9 +141,11 @@ void MyScene::update(float deltaTime)
 	}
 
 	//keeps test enemy on the ground
-	if (testE->position.y > ground) {
-		testE->velocity.y = 0;
-		testE->position = Point2(testE->position.x, ground);
+	for (int i = 0; i < enemyVector.size(); i++) {
+		if (enemyVector[i]->position.y > ground) {
+			enemyVector[i]->velocity.y = 0;
+			enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+		}
 	}
 	
 	//camera position relative to player
@@ -244,13 +246,15 @@ void MyScene::enemyAnimationController() {
 
 	//animation for idle
 	if (Eidle) {
-		static int f = 0;
-		if (f > 3) { f = 0; }
-		testE->sprite()->frame(f);
-		if (s.seconds() > 0.10f) {
+		for (int i = 0; i < enemyVector.size(); i++) {
+			static int f = 0;
+			if (f > 3) { f = 0; }
+			enemyVector[i]->sprite()->frame(f);
+			if (s.seconds() > 0.10f) {
 
-			f++;
-			s.start();
+				f++;
+				s.start();
+			}
 		}
 	}
 }
@@ -291,19 +295,45 @@ void MyScene::animationHandler( int y, int x) {
 
 void MyScene::bulletTest() {
 	std::vector<Bullet*>::iterator it = bulletVector.begin();
-	while (it != bulletVector.end())
-	{
-		if ((*it)->isCollidingWith(testE)) {
-			Bullet* b = (*it);
-			this->removeChild(b);
-			it = bulletVector.erase(it);
-			delete b;
-		}
-		else
-		{
-			it++;
+	while (it != bulletVector.end()) {
+		for (int i = 0; i < enemyVector.size(); i++) {
+			if ((*it)->isCollidingWith(enemyVector[i])) {
+				Bullet* b = (*it);
+				this->removeChild(b);
+				it = bulletVector.erase(it);
+				delete b;
+
+				enemyDeSpawn();
+			}
+			else
+			{
+				it++;
+			}
 		}
 	}
+}
+
+void MyScene::enemySpawn(float x, float y) {
+	Enemy* enemy = new Enemy();
+	enemy->position = Point2(x, y);
+
+	this->addChild(enemy);
+	enemyVector.push_back(enemy);
+	print("im spawning a enemy");
+}
+
+void MyScene::enemyDeSpawn() {
+	std::vector<Enemy*>::iterator it = enemyVector.begin();
+	while (it != enemyVector.end()) {
+		Enemy* e = (*it);
+		this->removeChild(e);
+		it = enemyVector.erase(it);
+		delete e;
+	}
+}
+
+void MyScene::print(std::string string) {
+	std::cout << string << std::endl;
 }
 
 

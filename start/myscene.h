@@ -46,6 +46,12 @@ public:
 
 	void MyScene::bulletTest();
 
+	void MyScene::enemySpawn(float x, float y);
+
+	void MyScene::enemyDeSpawn();
+
+	void MyScene::print(std::string string);
+
 	bool turned;
 
 	bool isFiring;
@@ -70,11 +76,11 @@ private:
 
 	CoolGuy* MyCoolGuy1;
 
-	Enemies* testE;
-
 	Background* backgroundTest;
 
 	std::vector<Bullet*> bulletVector;
+
+	std::vector<Enemy*> enemyVector;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
