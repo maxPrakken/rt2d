@@ -333,7 +333,7 @@ void MyScene::enemyMovement(float deltaTime) {
 		}
 
 		//will make enemy go towards player while shooting
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 5) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
 			//enemyShoot();
 			print("enemy is shooting long");
 
@@ -348,7 +348,7 @@ void MyScene::enemyMovement(float deltaTime) {
 		}
 
 		//enemy detects player, will move toword player
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 5)) {
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 10) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
 
 			print("enemy has detected you and is comming for your ass :D");
 
