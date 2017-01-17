@@ -52,6 +52,8 @@ public:
 
 	void MyScene::print(std::string string);
 
+	//void MyScene::enemyMovement(float deltaTime);
+
 	bool turned;
 
 	bool isFiring;
