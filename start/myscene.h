@@ -52,7 +52,7 @@ public:
 
 	void MyScene::print(std::string string);
 
-	//void MyScene::enemyMovement(float deltaTime);
+	void MyScene::enemyMovement(float deltaTime);
 
 	bool turned;
 

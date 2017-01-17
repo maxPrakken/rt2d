@@ -73,43 +73,7 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
-	for (int i = 0; i < enemyVector.size(); i++) {
-		//stop zone, stops the enemy if he is close enough and starts shooting
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
-			//enemyShoot();
-			print("enemy is shooting short");
-		}
-
-		//will make enemy go towards player while shooting
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 5) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
-			//enemyShoot();
-			print("enemy is shooting long");
-
-			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
-				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
-				enemyVector[i]->scale = Point(1.0f, 1.0f);
-			}
-			else {
-				enemyVector[i]->position += Point2(300, 0) * deltaTime;
-				enemyVector[i]->scale = Point(-1.0f, 1.0f);
-			}
-		}
-
-		//enemy detects player, will move toword player
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 5)) {
-
-			print("enemy has detected you and is comming for your ass :D");
-
-			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
-				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
-				enemyVector[i]->scale = Point(1.0f, 1.0f);
-			}
-			else {
-				enemyVector[i]->position += Point2(300, 0) * deltaTime;
-				enemyVector[i]->scale = Point(-1.0f, 1.0f);
-			}
-		}
-	}
+	
 
 	//player collision with platform
 	if (MyCoolGuy1->isCollidingWith(platform1)) {
@@ -201,6 +165,7 @@ void MyScene::update(float deltaTime)
 	animationController();
 	enemyAnimationController();
 	bulletTest();
+	enemyMovement(deltaTime);
 }
 
 void MyScene::animationController() {
@@ -357,6 +322,46 @@ void MyScene::enemyDeSpawn() {
 
 void MyScene::print(std::string string) {
 	std::cout << string << std::endl;
+}
+
+void MyScene::enemyMovement(float deltaTime) {
+	for (int i = 0; i < enemyVector.size(); i++) {
+		//stop zone, stops the enemy if he is close enough and starts shooting
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
+			//enemyShoot();
+			print("enemy is shooting short");
+		}
+
+		//will make enemy go towards player while shooting
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 5) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
+			//enemyShoot();
+			print("enemy is shooting long");
+
+			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
+				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
+				enemyVector[i]->scale = Point(1.0f, 1.0f);
+			}
+			else {
+				enemyVector[i]->position += Point2(300, 0) * deltaTime;
+				enemyVector[i]->scale = Point(-1.0f, 1.0f);
+			}
+		}
+
+		//enemy detects player, will move toword player
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 5)) {
+
+			print("enemy has detected you and is comming for your ass :D");
+
+			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
+				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
+				enemyVector[i]->scale = Point(1.0f, 1.0f);
+			}
+			else {
+				enemyVector[i]->position += Point2(300, 0) * deltaTime;
+				enemyVector[i]->scale = Point(-1.0f, 1.0f);
+			}
+		}
+	}
 }
 
 
