@@ -46,6 +46,7 @@ MyScene::MyScene() : Scene()
 
 	//first enemy spawn out vector
 	enemySpawn(500.0f, 680.0f);
+	enemySpawn(200.0f, 680.0f);
 	
 }
 
@@ -58,6 +59,12 @@ MyScene::~MyScene()
 		delete bulletVector[i];
 	}
 	bulletVector.clear();
+
+	//delete enemies on close program
+	for (unsigned int i = 0; i < enemyVector.size(); i++) {
+		this->removeChild(enemyVector[i]);
+		delete enemyVector[i];
+	}
 
 	// deconstruct and delete the Tree
 	//this->removeChild(myentity);
@@ -266,6 +273,7 @@ void MyScene::bulletspawn() {
 		//add child to vector
 		this->addChild(bullet1);
 		bulletVector.push_back(bullet1);
+		print("adding bullets to vector");
 }
 
 //makes making animations for the player easier. 
@@ -282,23 +290,36 @@ void MyScene::animationHandler( int y, int x) {
 }
 
 void MyScene::bulletTest() {
-	std::vector<Bullet*>::iterator it = bulletVector.begin();
-	while (it != bulletVector.end()) {
-		for (int i = 0; i < enemyVector.size(); i++) {
-			if ((*it)->isCollidingWith(enemyVector[i])) {
+	int todelete = 0;
+
+	std::vector<Enemy*>::iterator that = enemyVector.begin();
+	while (that != enemyVector.end()) {
+		todelete = 0;
+		std::vector<Bullet*>::iterator it = bulletVector.begin();
+		while (it != bulletVector.end()) {
+			if ((*it)->isCollidingWith((*that))) {
 				Bullet* b = (*it);
 				this->removeChild(b);
 				it = bulletVector.erase(it);
 				delete b;
-
-				enemyDeSpawn();
+				print("hitting");
+				todelete = 1;
 			}
-			else
-			{
+			else {
 				it++;
 			}
 		}
+		if (todelete == 1) {
+			Enemy* e = (*that);
+			this->removeChild(e);
+			that = enemyVector.erase(that);
+			delete e;
+		}
+		else {
+			that++;
+		}
 	}
+	
 }
 
 void MyScene::enemySpawn(float x, float y) {
@@ -329,13 +350,13 @@ void MyScene::enemyMovement(float deltaTime) {
 		//stop zone, stops the enemy if he is close enough and starts shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
 			//enemyShoot();
-			print("enemy is shooting short");
+			//print("enemy is shooting short");
 		}
 
 		//will make enemy go towards player while shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
 			//enemyShoot();
-			print("enemy is shooting long");
+			//print("enemy is shooting long");
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
 				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
@@ -350,7 +371,7 @@ void MyScene::enemyMovement(float deltaTime) {
 		//enemy detects player, will move toword player
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 10) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
 
-			print("enemy has detected you and is comming for your ass :D");
+			//print("enemy has detected you and is comming for your ass :D");
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
 				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
