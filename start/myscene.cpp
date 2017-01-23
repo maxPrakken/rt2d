@@ -6,6 +6,12 @@
 MyScene::MyScene() : Scene()
 {
 
+	//camera offset
+	cameraOffset = 300;
+
+	//camera velocity
+	cameraVelocity = Vector2(0, 0);
+
 	//check what state the enemy is in
 	Eidle = true;
 	Eshooting = false;
@@ -52,6 +58,9 @@ MyScene::MyScene() : Scene()
 	//first enemy spawn out vector
 	enemySpawn(500.0f, 680.0f);
 	enemySpawn(200.0f, 680.0f);
+
+	//camera position relative to player
+	camera()->position = Point(MyCoolGuy1->position.x, SHEIGHT / 1.5, 1);
 	
 }
 
@@ -85,6 +94,10 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
+
+	//velocity to camera
+	camera()->position += cameraVelocity * deltaTime;
+
 	//player collision with platform
 	if (MyCoolGuy1->isCollidingWith(platform1)) {
 		onP = true;
@@ -141,16 +154,15 @@ void MyScene::update(float deltaTime)
 			enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
 		}
 	}
-	
-	//camera position relative to player
-	camera()->position = Point(MyCoolGuy1->position.x + 300, SHEIGHT / 1.5, 1);
 
 	//make bullet come out of correct end of tank
 	if (turned) {
 		xoffset = -85;
+		cameraOffset = -300;
 	}
 	else {
 		xoffset = 85;
+		cameraOffset = 300;
 	}
 
 	//make bullet come out of correct end of enemy
@@ -168,6 +180,29 @@ void MyScene::update(float deltaTime)
 	enemyMovement(deltaTime);
 	enemyBulletDespawnOnHitGround();
 	bulletDespawnOnHitGround();
+	cameraController();
+}
+
+void MyScene::cameraController() {
+	if (!turned) {
+		if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset && 
+			camera()->position.x < MyCoolGuy1->position.x + cameraOffset) {
+			cameraVelocity = Vector2(800, 0);
+		}
+		else {
+			cameraVelocity = Vector2(0, 0);
+		}
+	}
+	
+	if (turned) {
+		if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset &&
+			camera()->position.x > MyCoolGuy1->position.x + cameraOffset) {
+			cameraVelocity = Vector2(-800, 0);
+		}
+		else {
+			cameraVelocity = Vector2(0, 0);
+		}
+	}
 }
 
 void MyScene::enemyBulletDespawnOnHitGround() {
@@ -288,7 +323,7 @@ void MyScene::enemyAnimationController() {
 //spawn bullets
 void MyScene::bulletspawn() {	
 		Bullet* bullet1 = new Bullet();
-		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 10);
+		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 20);
 		bullet1->scale = Point(1.0f, 1.0f);
 		
 		//make bullets face correct direction
@@ -388,7 +423,6 @@ void MyScene::enemyBulletSpawn() {
 			Ebullet1->scale = Point(1.0f, 1.0f);
 			this->addChild(Ebullet1);
 			enemyBulletVector.push_back(Ebullet1);
-			print("adsf");
 
 			if (Eturned) {
 				Ebullet1->velocity = Vector2(-900, 0);

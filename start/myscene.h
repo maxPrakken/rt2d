@@ -63,6 +63,8 @@ public:
 
 	void MyScene::enemyBulletDespawnOnHitGround();
 
+	void MyScene::cameraController();
+
 	bool turned;
 	bool Eturned;
 
@@ -74,6 +76,7 @@ public:
 
 	int xoffset;
 	int eXoffset;
+	int cameraOffset;
 
 	bool Eidle;
 	bool Eshooting;
@@ -82,6 +85,8 @@ public:
 	bool EisFiring;
 
 	bool inShootingRange;
+
+	Vector2 cameraVelocity;
 
 private:
 	/// @brief the rotating square in the middle of the screen
