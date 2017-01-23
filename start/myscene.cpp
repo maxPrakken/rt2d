@@ -160,12 +160,40 @@ void MyScene::update(float deltaTime)
 	else {
 		eXoffset = 85;
 	}
+	
+	enemyBulletShootHandler();
+	animationController();
+	enemyAnimationController();
+	bulletTest();
+	enemyMovement(deltaTime);
+	enemyBulletDespawnOnHitGround();
+	bulletDespawnOnHitGround();
+}
 
+void MyScene::enemyBulletDespawnOnHitGround() {
+	//despawn enemy bullets on hit ground
+	std::vector<Ebullet*>::iterator it = enemyBulletVector.begin();
+	while (it != enemyBulletVector.end())
+	{
+		if ((*it)->position.y >= 730) {
+			Ebullet* b = (*it);
+			this->removeChild(b);
+			it = enemyBulletVector.erase(it);
+			delete b;
+		}
+		else
+		{
+			it++;
+		}
+	}
+}
+
+void MyScene::bulletDespawnOnHitGround() {
 	//despawn bullets on hit ground
 	std::vector<Bullet*>::iterator it = bulletVector.begin();
 	while (it != bulletVector.end())
 	{
-		if ((*it)->position.y >= ground) {
+		if ((*it)->position.y >= 730) {
 			Bullet* b = (*it);
 			this->removeChild(b);
 			it = bulletVector.erase(it);
@@ -176,12 +204,6 @@ void MyScene::update(float deltaTime)
 			it++;
 		}
 	}
-	
-	enemyBulletShootHandler();
-	animationController();
-	enemyAnimationController();
-	bulletTest();
-	enemyMovement(deltaTime);
 }
 
 void MyScene::animationController() {
@@ -267,16 +289,16 @@ void MyScene::enemyAnimationController() {
 void MyScene::bulletspawn() {	
 		Bullet* bullet1 = new Bullet();
 		bullet1->position = Point2(MyCoolGuy1->position.x + xoffset, MyCoolGuy1->position.y - 10);
-		bullet1->scale = Point(0.5f, 0.5f);
+		bullet1->scale = Point(1.0f, 1.0f);
 		
 		//make bullets face correct direction
 		if (turned) {
 			bullet1->velocity = Vector2(-900, 0);
-			bullet1->scale = Point(-0.5f, -0.5f);
+			bullet1->scale = Point(-1.0f, -1.0f);
 		}
 		else {
 			bullet1->velocity = Vector2(900, 0);
-			bullet1->scale = Point(0.5f, 0.5f);
+			bullet1->scale = Point(1.0f, 1.0f);
 		}
 
 		//add child to vector
@@ -363,17 +385,18 @@ void MyScene::enemyBulletSpawn() {
 
 			Ebullet* Ebullet1 = new Ebullet();
 			Ebullet1->position = Point2(e->position.x + eXoffset, e->position.y - 10);
-			Ebullet1->scale = Point(0.5f, 0.5f);
+			Ebullet1->scale = Point(1.0f, 1.0f);
 			this->addChild(Ebullet1);
+			enemyBulletVector.push_back(Ebullet1);
 			print("adsf");
 
 			if (Eturned) {
 				Ebullet1->velocity = Vector2(-900, 0);
-				Ebullet1->scale = Point(-0.5f, -0.5f);
+				Ebullet1->scale = Point(-1.0f, -1.0f);
 			}
 			else {
 				Ebullet1->velocity = Vector2(900, 0);
-				Ebullet1->scale = Point(0.5f, 0.5f);
+				Ebullet1->scale = Point(1.0f, 1.0f);
 			}
 			
 		}

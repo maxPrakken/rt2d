@@ -59,6 +59,10 @@ public:
 
 	void MyScene::enemyBulletShootHandler();
 
+	void MyScene::bulletDespawnOnHitGround();
+
+	void MyScene::enemyBulletDespawnOnHitGround();
+
 	bool turned;
 	bool Eturned;
 
@@ -90,6 +94,8 @@ private:
 	Background* backgroundTest;
 
 	std::vector<Bullet*> bulletVector;
+
+	std::vector<Ebullet*> enemyBulletVector;
 
 	std::vector<Enemy*> enemyVector;
 
