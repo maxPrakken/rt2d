@@ -19,3 +19,22 @@ void CoolGuy::update(float deltaTime)
 	position += velocity * deltaTime;
 	velocity.y += gravity * deltaTime;
 }
+
+void CoolGuy::left(float deltaTime) {
+	this->scale = Point(-1.0f, 1.0f);
+	this->position += Point2(-500, 0) * deltaTime;
+}
+
+void CoolGuy::right(float deltaTime) {
+	this->scale = Point(1.0f, 1.0f);
+	this->position += Point2(500, 0) * deltaTime;
+}
+
+void CoolGuy::leftR(float deltaTime) {
+	this->scale = Point(1.0f, 1.0f);
+	this->position += Point2(-200, 0) * deltaTime;
+}
+
+void CoolGuy::jump(float deltaTime) {
+	this->velocity = Vector2(0, -500);
+}

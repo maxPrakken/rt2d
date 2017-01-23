@@ -200,6 +200,8 @@ add_executable(start
 	start/platform.h
 	start/enemies.cpp
 	start/enemies.h
+	start/ebullet.cpp
+	start/ebullet.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

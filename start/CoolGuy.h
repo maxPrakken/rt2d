@@ -34,5 +34,10 @@ public:
 	/// @brief int that indicates where on the spritesheet you are with a animation.
 	int spriteS;
 
+	void CoolGuy::left(float deltaTime);
+	void CoolGuy::right(float deltaTime);
+	void CoolGuy::leftR(float deltaTime);
+	void CoolGuy::jump(float deltaTime);
+
 };
 

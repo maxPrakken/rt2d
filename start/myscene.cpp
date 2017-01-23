@@ -12,11 +12,16 @@ MyScene::MyScene() : Scene()
 	Edriving = false;
 	Edrivingshooting = false;
 
+	inShootingRange = false;
+
 	// start the timer.
 	t.start();
 
 	// start enemy animation timer
 	s.start();
+
+	//start enemy shoot timer
+	k.start();
 
 	//check if player has turned
 	turned = false;
@@ -80,8 +85,6 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
-	
-
 	//player collision with platform
 	if (MyCoolGuy1->isCollidingWith(platform1)) {
 		onP = true;
@@ -99,28 +102,25 @@ void MyScene::update(float deltaTime)
 
 	//basic movement right
 	if (input()->getKey(GLFW_KEY_D)) {
-		MyCoolGuy1->scale = Point(1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(500, 0) * deltaTime;
+		MyCoolGuy1->right(deltaTime);
 		turned = false;
 	}
 
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-		MyCoolGuy1->scale = Point(1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(-200, 0) * deltaTime;
+		MyCoolGuy1->leftR(deltaTime);
 		turned = false;
 	}
 	
 	if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-		MyCoolGuy1->scale = Point(-1.0f, 1.0f);
-		MyCoolGuy1->position += Point2(-500, 0) * deltaTime;
+		MyCoolGuy1->left(deltaTime);
 		turned = true;
 	}
 
 	//basic player jump
 	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground || 
 		(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
-			MyCoolGuy1->velocity = Vector2(0, -500);
+		MyCoolGuy1->jump(deltaTime);
 	}
 
 	//player shoot
@@ -153,6 +153,14 @@ void MyScene::update(float deltaTime)
 		xoffset = 85;
 	}
 
+	//make bullet come out of correct end of enemy
+	if (Eturned) {
+		eXoffset = -85;
+	}
+	else {
+		eXoffset = 85;
+	}
+
 	//despawn bullets on hit ground
 	std::vector<Bullet*>::iterator it = bulletVector.begin();
 	while (it != bulletVector.end())
@@ -169,6 +177,7 @@ void MyScene::update(float deltaTime)
 		}
 	}
 	
+	enemyBulletShootHandler();
 	animationController();
 	enemyAnimationController();
 	bulletTest();
@@ -345,45 +354,91 @@ void MyScene::print(std::string string) {
 	std::cout << string << std::endl;
 }
 
+void MyScene::enemyBulletSpawn() {
+	std::vector<Enemy*>::iterator it = enemyVector.begin();
+	while (it != enemyVector.end()) {
+		if (k.seconds() > 1.0f) {
+			k.start();
+			Enemy* e = (*it);
+
+			Ebullet* Ebullet1 = new Ebullet();
+			Ebullet1->position = Point2(e->position.x + eXoffset, e->position.y - 10);
+			Ebullet1->scale = Point(0.5f, 0.5f);
+			this->addChild(Ebullet1);
+			print("adsf");
+
+			if (Eturned) {
+				Ebullet1->velocity = Vector2(-900, 0);
+				Ebullet1->scale = Point(-0.5f, -0.5f);
+			}
+			else {
+				Ebullet1->velocity = Vector2(900, 0);
+				Ebullet1->scale = Point(0.5f, 0.5f);
+			}
+			
+		}
+		else {
+			it++;
+
+		}
+	}
+}
+
+void MyScene::enemyBulletShootHandler() {
+	if (inShootingRange == true) {
+		enemyBulletSpawn();
+	}
+}
+
 void MyScene::enemyMovement(float deltaTime) {
 	for (int i = 0; i < enemyVector.size(); i++) {
 		//stop zone, stops the enemy if he is close enough and starts shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
 			//enemyShoot();
 			//print("enemy is shooting short");
+			inShootingRange = true;
 		}
 
 		//will make enemy go towards player while shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
 			//enemyShoot();
 			//print("enemy is shooting long");
+			inShootingRange = true;
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
 				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
 				enemyVector[i]->scale = Point(1.0f, 1.0f);
+				Eturned = true;
 			}
 			else {
 				enemyVector[i]->position += Point2(300, 0) * deltaTime;
 				enemyVector[i]->scale = Point(-1.0f, 1.0f);
+				Eturned = false;
 			}
 		}
 
 		//enemy detects player, will move toword player
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 10) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
-
+			inShootingRange = false;
 			//print("enemy has detected you and is comming for your ass :D");
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
 				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
 				enemyVector[i]->scale = Point(1.0f, 1.0f);
+				Eturned = true;
 			}
 			else {
 				enemyVector[i]->position += Point2(300, 0) * deltaTime;
 				enemyVector[i]->scale = Point(-1.0f, 1.0f);
+				Eturned = false;
 			}
 		}
 	}
 }
+
+
+
+
 
 
 

@@ -19,6 +19,7 @@
 #include "bullet.h"
 #include "platform.h"
 #include "enemies.h"
+#include "ebullet.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
@@ -54,7 +55,12 @@ public:
 
 	void MyScene::enemyMovement(float deltaTime);
 
+	void MyScene::enemyBulletSpawn();
+
+	void MyScene::enemyBulletShootHandler();
+
 	bool turned;
+	bool Eturned;
 
 	bool isFiring;
 	bool isFiringD;
@@ -63,12 +69,15 @@ public:
 	bool onP;
 
 	int xoffset;
+	int eXoffset;
 
 	bool Eidle;
 	bool Eshooting;
 	bool Edriving;
 	bool Edrivingshooting;
 	bool EisFiring;
+
+	bool inShootingRange;
 
 private:
 	/// @brief the rotating square in the middle of the screen
@@ -88,6 +97,8 @@ private:
 	Timer t;
 
 	Timer s;
+
+	Timer k;
 };
 
 #endif /* SCENE00_H */
