@@ -31,6 +31,7 @@ MyScene::MyScene() : Scene()
 
 	//check if player has turned
 	turned = false;
+	semiTurned = false;
 
 	//sets ground level
 	ground = 700;
@@ -117,17 +118,20 @@ void MyScene::update(float deltaTime)
 	if (input()->getKey(GLFW_KEY_D)) {
 		MyCoolGuy1->right(deltaTime);
 		turned = false;
+		semiTurned = false;
 	}
 
 	//basic movement left
 	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
 		MyCoolGuy1->leftR(deltaTime);
 		turned = false;
+		semiTurned = true;
 	}
 	
 	if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
 		MyCoolGuy1->left(deltaTime);
 		turned = true;
+		semiTurned = false;
 	}
 
 	//basic player jump
@@ -194,7 +198,7 @@ void MyScene::cameraController() {
 		}
 	}
 	
-	if (turned) {
+	if (turned || semiTurned) {
 		if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset &&
 			camera()->position.x > MyCoolGuy1->position.x + cameraOffset) {
 			cameraVelocity = Vector2(-800, 0);

@@ -66,6 +66,7 @@ public:
 	void MyScene::cameraController();
 
 	bool turned;
+	bool semiTurned;
 	bool Eturned;
 
 	bool isFiring;
