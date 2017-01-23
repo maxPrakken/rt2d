@@ -36,11 +36,6 @@ MyScene::MyScene() : Scene()
 	//sets ground level
 	ground = 700;
 
-	//first platform initialising and stuffs
-	platform1 = new Platform();
-	platform1->position = Point2(500, 600);
-	//platform1->scale = Point(0.5f, 0.5f);
-
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
 	MyCoolGuy1->position = Point2(200, 680);
@@ -54,7 +49,6 @@ MyScene::MyScene() : Scene()
 	// add myentity to this Scene as a child. :))))
 	this->addChild(backgroundTest);
 	this->addChild(MyCoolGuy1);
-	this->addChild(platform1);
 
 	//first enemy spawn out vector
 	enemySpawn(500.0f, 680.0f);
@@ -62,7 +56,9 @@ MyScene::MyScene() : Scene()
 
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x, SHEIGHT / 1.5, 1);
-	
+
+	//spawn platforms
+	platformSpawn(500.0f, 600.0f);
 }
 
 
@@ -98,14 +94,6 @@ void MyScene::update(float deltaTime)
 
 	//velocity to camera
 	camera()->position += cameraVelocity * deltaTime;
-
-	//player collision with platform
-	if (MyCoolGuy1->isCollidingWith(platform1)) {
-		onP = true;
-		MyCoolGuy1->velocity.y = 0;
-		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, platform1->position.y - 80);
-	}
-	else { onP = false; }
 
 	// ###############################################################
 	// Escape key stops the Scene
@@ -176,7 +164,8 @@ void MyScene::update(float deltaTime)
 	else {
 		eXoffset = 85;
 	}
-	
+
+	playerOnPlatform();
 	enemyBulletShootHandler();
 	animationController();
 	enemyAnimationController();
@@ -399,6 +388,31 @@ void MyScene::enemySpawn(float x, float y) {
 	this->addChild(enemy);
 	enemyVector.push_back(enemy);
 	print("im spawning a enemy");
+}
+
+void MyScene::platformSpawn(float x, float y) {
+	Platform* platform = new Platform();
+	platform->position = Point2(x, y);
+
+	this->addChild(platform);
+	platformVector.push_back(platform);
+	print("spawning a platform");
+}
+
+void MyScene::playerOnPlatform() {
+	//player collision with platform
+	std::vector<Platform*>::iterator it = platformVector.begin();
+	while (it != platformVector.end()) {
+		if (MyCoolGuy1->isCollidingWith((*it))) {
+			onP = true;
+			MyCoolGuy1->velocity.y = 0;
+			MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, (*it)->position.y - 80);
+		}
+		else {
+			onP = false;
+		}
+		it++;
+	}
 }
 
 void MyScene::enemyDeSpawn() {

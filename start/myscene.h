@@ -65,6 +65,10 @@ public:
 
 	void MyScene::cameraController();
 
+	void MyScene::platformSpawn(float x, float y);
+
+	void MyScene::playerOnPlatform();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
@@ -104,6 +108,8 @@ private:
 	std::vector<Ebullet*> enemyBulletVector;
 
 	std::vector<Enemy*> enemyVector;
+	
+	std::vector<Platform*> platformVector;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
