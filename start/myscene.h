@@ -74,8 +74,6 @@ public:
 
 	void MyScene::healthAnimationHandler(int y, int x);
 
-	void MyScene::enemyHitPlayer();
-
 	bool turned;
 	bool semiTurned;
 	bool Eturned;

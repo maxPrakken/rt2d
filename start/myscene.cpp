@@ -86,6 +86,18 @@ MyScene::~MyScene()
 		delete enemyVector[i];
 	}
 
+	//delete enemybulletvector
+	for (unsigned int i = 0; i < enemyBulletVector.size(); i++) {
+		this->removeChild(enemyBulletVector[i]);
+		delete enemyBulletVector[i];
+	}
+
+	//delete platformvector
+	for (unsigned int i = 0; i < platformVector.size(); i++) {
+		this->removeChild(platformVector[i]);
+		delete platformVector[i];
+	}
+
 	// deconstruct and delete the Tree
 	//this->removeChild(myentity);
 	this->removeChild(MyCoolGuy1);
