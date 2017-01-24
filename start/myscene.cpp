@@ -6,6 +6,8 @@
 MyScene::MyScene() : Scene()
 {
 
+	playerHealth = 4;
+
 	//camera offset
 	cameraOffset = 300;
 
@@ -29,6 +31,9 @@ MyScene::MyScene() : Scene()
 	//start enemy shoot timer
 	k.start();
 
+	//start health animation timer
+	h.start();
+
 	//check if player has turned
 	turned = false;
 	semiTurned = false;
@@ -41,6 +46,9 @@ MyScene::MyScene() : Scene()
 	MyCoolGuy1->position = Point2(200, 680);
 	//MyCoolGuy1->scale = Point(0.5f, 0.5f);
 
+	//health hud
+	healthbar = new Health();
+
 	//background initialise
 	backgroundTest = new Background();
 	backgroundTest->position = Point2(SWIDTH / 2, SHEIGHT / 2);
@@ -48,6 +56,7 @@ MyScene::MyScene() : Scene()
 	// create the scene 'tree'
 	// add myentity to this Scene as a child. :))))
 	this->addChild(backgroundTest);
+	this->addChild(healthbar);
 	this->addChild(MyCoolGuy1);
 
 	//first enemy spawn out vector
@@ -91,6 +100,8 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
+
+	healthbar->position = Point2(camera()->position.x - 500, 200);
 
 	//velocity to camera
 	camera()->position += cameraVelocity * deltaTime;
@@ -174,6 +185,39 @@ void MyScene::update(float deltaTime)
 	enemyBulletDespawnOnHitGround();
 	bulletDespawnOnHitGround();
 	cameraController();
+	healthAnimationController();
+
+}
+
+
+
+void MyScene::healthAnimationController() {
+	if (playerHealth == 4) {
+		healthAnimationHandler(4, 4);
+	}
+	else if (playerHealth == 3) {
+		healthAnimationHandler(5, 5);
+	}
+	else if (playerHealth == 2) {
+		healthAnimationHandler(2, 2);
+	}
+	else if (playerHealth == 1) {
+		healthAnimationHandler(0, 0);
+	}
+	else {
+		healthAnimationHandler(1, 1);
+	}
+}
+
+void MyScene::healthAnimationHandler(int y, int x) {
+	static int f = y;
+	if (f > x) { f = y; }
+	healthbar->sprite()->frame(f);
+	if (h.seconds() > 0.10f) {
+
+		f++;
+		h.start();
+	}
 }
 
 void MyScene::cameraController() {
@@ -203,7 +247,8 @@ void MyScene::enemyBulletDespawnOnHitGround() {
 	std::vector<Ebullet*>::iterator it = enemyBulletVector.begin();
 	while (it != enemyBulletVector.end())
 	{
-		if ((*it)->position.y >= 730) {
+		if ((*it)->position.y >= 730 || MyCoolGuy1->isCollidingWith((*it))) {
+			playerHealth -= 1;
 			Ebullet* b = (*it);
 			this->removeChild(b);
 			it = enemyBulletVector.erase(it);

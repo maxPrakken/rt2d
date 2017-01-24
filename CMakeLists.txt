@@ -202,6 +202,8 @@ add_executable(start
 	start/enemies.h
 	start/ebullet.cpp
 	start/ebullet.h
+	start/health.cpp
+	start/health.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

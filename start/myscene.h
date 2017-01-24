@@ -20,6 +20,7 @@
 #include "platform.h"
 #include "enemies.h"
 #include "ebullet.h"
+#include "health.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
@@ -69,6 +70,12 @@ public:
 
 	void MyScene::playerOnPlatform();
 
+	void MyScene::healthAnimationController();
+
+	void MyScene::healthAnimationHandler(int y, int x);
+
+	void MyScene::enemyHitPlayer();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
@@ -82,6 +89,8 @@ public:
 	int xoffset;
 	int eXoffset;
 	int cameraOffset;
+
+	int playerHealth;
 
 	bool Eidle;
 	bool Eshooting;
@@ -97,7 +106,7 @@ private:
 	/// @brief the rotating square in the middle of the screen
 	//MyEntity* myentity;
 
-	Platform* platform1;
+	Health* healthbar;
 
 	CoolGuy* MyCoolGuy1;
 
@@ -113,10 +122,9 @@ private:
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
-
 	Timer s;
-
 	Timer k;
+	Timer h;
 };
 
 #endif /* SCENE00_H */
