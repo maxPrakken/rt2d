@@ -10,6 +10,7 @@
 #define MYSCENE_H
 
 #include <rt2d/scene.h>
+#include <rt2d/text.h>
 
 #include <vector>
 
@@ -118,11 +119,14 @@ private:
 	
 	std::vector<Platform*> platformVector;
 
+	Text* timerText;
+
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 	Timer s;
 	Timer k;
 	Timer h;
+	Timer countuptimer;
 };
 
 #endif /* SCENE00_H */

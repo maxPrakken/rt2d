@@ -34,6 +34,8 @@ MyScene::MyScene() : Scene()
 	//start health animation timer
 	h.start();
 
+	countuptimer.start();
+
 	//check if player has turned
 	turned = false;
 	semiTurned = false;
@@ -68,6 +70,10 @@ MyScene::MyScene() : Scene()
 
 	//spawn platforms
 	platformSpawn(500.0f, 600.0f);
+
+	timerText = new Text();
+	timerText->message("Hello World!");
+	this->addChild(timerText);
 }
 
 
@@ -117,6 +123,11 @@ void MyScene::update(float deltaTime)
 
 	//velocity to camera
 	camera()->position += cameraVelocity * deltaTime;
+
+	timerText->position = Point2(healthbar->position.x + 900, 200);
+	std::stringstream ts;
+	ts << countuptimer.seconds();
+	timerText->message(ts.str());
 
 	// ###############################################################
 	// Escape key stops the Scene
@@ -346,11 +357,6 @@ void MyScene::animationController() {
 		isFiring = true;
 		animationHandler(8, 8);
 	}
-
-	//animation for idle
-	else if (!input()->getMouseDown(GLFW_MOUSE_BUTTON_1) && !(input()->getKey(GLFW_KEY_A) || input()->getKey(GLFW_KEY_D))) {
-		animationHandler(0, 3);
-	}
 }
 
 void MyScene::enemyAnimationController() {
@@ -360,6 +366,32 @@ void MyScene::enemyAnimationController() {
 		for (int i = 0; i < enemyVector.size(); i++) {
 			static int f = 0;
 			if (f > 3) { f = 0; }
+			enemyVector[i]->sprite()->frame(f);
+			if (s.seconds() > 0.10f) {
+
+				f++;
+				s.start();
+			}
+		}
+	}
+
+	else if (Edriving) {
+		for (int i = 0; i < enemyVector.size(); i++) {
+			static int f = 4;
+			if (f > 7) { f = 4; }
+			enemyVector[i]->sprite()->frame(f);
+			if (s.seconds() > 0.10f) {
+
+				f++;
+				s.start();
+			}
+		}
+	}
+
+	else if (Eshooting || Eshooting && Edriving) {
+		for (int i = 0; i < enemyVector.size(); i++) {
+			static int f = 8;
+			if (f > 8) { f = 8; }
 			enemyVector[i]->sprite()->frame(f);
 			if (s.seconds() > 0.10f) {
 
@@ -490,6 +522,9 @@ void MyScene::enemyBulletSpawn() {
 	std::vector<Enemy*>::iterator it = enemyVector.begin();
 	while (it != enemyVector.end()) {
 		if (k.seconds() > 1.0f) {
+			Edriving = false;
+			Eidle = false;
+			Eshooting = true;
 			k.start();
 			Enemy* e = (*it);
 
@@ -507,7 +542,7 @@ void MyScene::enemyBulletSpawn() {
 				Ebullet1->velocity = Vector2(900, 0);
 				Ebullet1->scale = Point(1.0f, 1.0f);
 			}
-			
+			Eshooting = false;
 		}
 		else {
 			it++;
@@ -526,15 +561,19 @@ void MyScene::enemyMovement(float deltaTime) {
 	for (int i = 0; i < enemyVector.size(); i++) {
 		//stop zone, stops the enemy if he is close enough and starts shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
-			//enemyShoot();
-			//print("enemy is shooting short");
+			if (Eshooting) {
+				Edriving = false;
+				Eidle = true;
+			}
 			inShootingRange = true;
 		}
 
 		//will make enemy go towards player while shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
-			//enemyShoot();
-			//print("enemy is shooting long");
+			if (Eshooting) {
+				Eidle = false;
+				Edriving = true;
+			}
 			inShootingRange = true;
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
@@ -552,7 +591,10 @@ void MyScene::enemyMovement(float deltaTime) {
 		//enemy detects player, will move toword player
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 10) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
 			inShootingRange = false;
-			//print("enemy has detected you and is comming for your ass :D");
+			if (Eshooting) {
+				Eidle = false;
+				Edriving = true;
+			}
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
 				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
