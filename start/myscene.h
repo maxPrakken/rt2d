@@ -75,6 +75,8 @@ public:
 
 	void MyScene::healthAnimationHandler(int y, int x);
 
+	void MyScene::backgroundSpawn(int xpos);
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
@@ -109,8 +111,6 @@ private:
 
 	CoolGuy* MyCoolGuy1;
 
-	Background* backgroundTest;
-
 	std::vector<Bullet*> bulletVector;
 
 	std::vector<Ebullet*> enemyBulletVector;
@@ -118,6 +118,8 @@ private:
 	std::vector<Enemy*> enemyVector;
 	
 	std::vector<Platform*> platformVector;
+
+	std::vector<Background*> backgroundVector;
 
 	Text* timerText;
 

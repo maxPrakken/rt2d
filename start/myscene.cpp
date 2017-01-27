@@ -48,16 +48,15 @@ MyScene::MyScene() : Scene()
 	MyCoolGuy1->position = Point2(200, 680);
 	//MyCoolGuy1->scale = Point(0.5f, 0.5f);
 
+	//spawns backgrounds
+	backgroundSpawn(0);
+	backgroundSpawn(4096);
+
 	//health hud
 	healthbar = new Health();
-
-	//background initialise
-	backgroundTest = new Background();
-	backgroundTest->position = Point2(SWIDTH / 2, SHEIGHT / 2);
 	
 	// create the scene 'tree'
 	// add myentity to this Scene as a child. :))))
-	this->addChild(backgroundTest);
 	this->addChild(healthbar);
 	this->addChild(MyCoolGuy1);
 
@@ -104,16 +103,18 @@ MyScene::~MyScene()
 		delete platformVector[i];
 	}
 
+	for (unsigned int i = 0; i < backgroundVector.size(); i++) {
+		this->removeChild(backgroundVector[i]);
+		delete backgroundVector[i];
+	}
+
 	// deconstruct and delete the Tree
 	//this->removeChild(myentity);
 	this->removeChild(MyCoolGuy1);
 
-	this->removeChild(backgroundTest);
-
 	// delete myentity from the heap (there was a 'new' in the constructor)
 	//delete myentity;
 	delete MyCoolGuy1;
-	delete backgroundTest;
 }
 
 void MyScene::update(float deltaTime)
@@ -212,7 +213,13 @@ void MyScene::update(float deltaTime)
 
 }
 
-
+void MyScene::backgroundSpawn(int xpos) {
+		//background initialise
+		Background* background1 = new Background();
+		background1->position = Point2(xpos, SHEIGHT / 2);
+		this->addChild(background1);
+		backgroundVector.push_back(background1);
+}
 
 void MyScene::healthAnimationController() {
 	if (playerHealth == 4) {
