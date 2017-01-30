@@ -150,7 +150,7 @@ void MyScene::update(float deltaTime)
 	else if (playerHealth <= 0) {
 		this->addChild(deathText);
 		deathText->message("you died, press R to restart");
-		deathText->position = Point2(healthbar->position.x + 500, 500);
+		deathText->position = Point2(healthbar->position.x + 100, 500);
 
 		//keep player on ground level
 		if (MyCoolGuy1->position.y > ground) {
@@ -256,16 +256,16 @@ void MyScene::backgroundSpawn(int xpos) {
 }
 
 void MyScene::healthAnimationController() {
-	if (playerHealth == 4) {
+	if (playerHealth == 7 || playerHealth == 8) {
 		healthAnimationHandler(4, 4);
 	}
-	else if (playerHealth == 3) {
+	else if (playerHealth == 5 || playerHealth == 6) {
 		healthAnimationHandler(5, 5);
 	}
-	else if (playerHealth == 2) {
+	else if (playerHealth == 3 || playerHealth == 4) {
 		healthAnimationHandler(2, 2);
 	}
-	else if (playerHealth == 1) {
+	else if (playerHealth == 1 || playerHealth == 2) {
 		healthAnimationHandler(0, 0);
 	}
 	else {
