@@ -5,8 +5,195 @@
 
 MyScene::MyScene() : Scene()
 {
+	worldBuild();
+}
 
-	playerHealth = 4;
+
+MyScene::~MyScene()
+{
+	//delete bullets on close program
+	for (unsigned int i = 0; i < bulletVector.size(); i++) {
+		this->removeChild(bulletVector[i]);
+		delete bulletVector[i];
+	}
+	bulletVector.clear();
+
+	//delete enemies on close program
+	for (unsigned int i = 0; i < enemyVector.size(); i++) {
+		this->removeChild(enemyVector[i]);
+		delete enemyVector[i];
+	}
+
+	//delete enemybulletvector
+	for (unsigned int i = 0; i < enemyBulletVector.size(); i++) {
+		this->removeChild(enemyBulletVector[i]);
+		delete enemyBulletVector[i];
+	}
+
+	//delete platformvector
+	for (unsigned int i = 0; i < platformVector.size(); i++) {
+		this->removeChild(platformVector[i]);
+		delete platformVector[i];
+	}
+
+	//delete backgroundvector
+	for (unsigned int i = 0; i < backgroundVector.size(); i++) {
+		this->removeChild(backgroundVector[i]);
+		delete backgroundVector[i];
+	}
+
+	// deconstruct and delete the Tree
+	//this->removeChild(myentity);
+	this->removeChild(MyCoolGuy1);
+
+	// delete myentity from the heap (there was a 'new' in the constructor)
+	//delete myentity;
+	delete MyCoolGuy1;
+}
+
+void MyScene::update(float deltaTime)
+{
+	if (playerHealth != 0) {
+		
+		healthbar->position = Point2(camera()->position.x - 500, 200);
+
+		//velocity to camera
+		camera()->position += cameraVelocity * deltaTime;
+
+		timerText->position = Point2(healthbar->position.x + 900, 200);
+		std::stringstream ts;
+		ts << countuptimer.seconds();
+		timerText->message(ts.str());
+
+		// ###############################################################
+		// Escape key stops the Scene
+		// ###############################################################
+		if (input()->getKeyUp( GLFW_KEY_ESCAPE )) {
+			this->stop();
+		}
+
+		//basic movement right
+		if (input()->getKey(GLFW_KEY_D)) {
+			MyCoolGuy1->right(deltaTime);
+			turned = false;
+			semiTurned = false;
+		}
+
+		//basic movement left
+		if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+			MyCoolGuy1->leftR(deltaTime);
+			turned = false;
+			semiTurned = true;
+		}
+	
+		if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+			MyCoolGuy1->left(deltaTime);
+			turned = true;
+			semiTurned = false;
+		}
+
+		//basic player jump
+		if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground || 
+			(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
+			MyCoolGuy1->jump(deltaTime);
+		}
+
+		//player shoot
+		if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+			bulletspawn();
+		}
+
+		//keep player on ground level
+		if (MyCoolGuy1->position.y > ground) {
+			MyCoolGuy1->velocity.y = 0;
+			MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
+		}
+
+		//keeps test enemy on the ground
+		for (int i = 0; i < enemyVector.size(); i++) {
+			if (enemyVector[i]->position.y > ground) {
+				enemyVector[i]->velocity.y = 0;
+				enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+			}
+		}
+
+		//make bullet come out of correct end of tank
+		if (turned) {
+			xoffset = -85;
+			cameraOffset = -300;
+		}
+		else {
+			xoffset = 85;
+			cameraOffset = 300;
+		}
+
+		//make bullet come out of correct end of enemy
+		if (Eturned) {
+			eXoffset = -85;
+		}
+		else {
+			eXoffset = 85;
+		}
+
+		playerOnPlatform();
+		enemyBulletShootHandler();
+		animationController();
+		enemyAnimationController();
+		bulletTest();
+		enemyMovement(deltaTime);
+		enemyBulletDespawnOnHitGround();
+		bulletDespawnOnHitGround();
+		cameraController();
+		healthAnimationController();
+	}
+
+	else if (playerHealth <= 0) {
+		this->addChild(deathText);
+		deathText->message("you died, press R to restart");
+		deathText->position = Point2(healthbar->position.x + 500, 500);
+
+		//keep player on ground level
+		if (MyCoolGuy1->position.y > ground) {
+			MyCoolGuy1->velocity.y = 0;
+			MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
+		}
+
+		//keeps test enemy on the ground
+		for (int i = 0; i < enemyVector.size(); i++) {
+			if (enemyVector[i]->position.y > ground) {
+				enemyVector[i]->velocity.y = 0;
+				enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+			}
+		}
+
+		if (input()->getKey(GLFW_KEY_R)) {
+			playerHealth = 8;
+			this->removeChild(deathText);
+			worldBuild();
+		}
+	}
+}
+
+void MyScene::worldBuild() {
+	//spawns backgrounds
+	backgroundSpawn(0);
+	backgroundSpawn(4096);
+	backgroundSpawn(8192);
+	backgroundSpawn(16384);
+	backgroundSpawn(32768);
+
+	//player initialising and attributes
+	MyCoolGuy1 = new CoolGuy();
+	MyCoolGuy1->position = Point2(200, 680);
+
+	//first enemy spawn out vector
+	enemySpawn(500.0f, 680.0f);
+	enemySpawn(200.0f, 680.0f);
+
+	//spawn platforms
+	platformSpawn(500.0f, 600.0f);
+
+	playerHealth = 8;
 
 	//camera offset
 	cameraOffset = 300;
@@ -43,174 +230,21 @@ MyScene::MyScene() : Scene()
 	//sets ground level
 	ground = 700;
 
-	//player initialising and attributes
-	MyCoolGuy1 = new CoolGuy();
-	MyCoolGuy1->position = Point2(200, 680);
-	//MyCoolGuy1->scale = Point(0.5f, 0.5f);
-
-	//spawns backgrounds
-	backgroundSpawn(0);
-	backgroundSpawn(4096);
-
 	//health hud
 	healthbar = new Health();
-	
+
 	// create the scene 'tree'
 	// add myentity to this Scene as a child. :))))
 	this->addChild(healthbar);
 	this->addChild(MyCoolGuy1);
 
-	//first enemy spawn out vector
-	enemySpawn(500.0f, 680.0f);
-	enemySpawn(200.0f, 680.0f);
-
 	//camera position relative to player
 	camera()->position = Point(MyCoolGuy1->position.x, SHEIGHT / 1.5, 1);
 
-	//spawn platforms
-	platformSpawn(500.0f, 600.0f);
-
 	timerText = new Text();
-	timerText->message("Hello World!");
 	this->addChild(timerText);
-}
 
-
-MyScene::~MyScene()
-{
-	//delete bullets on close program
-	for (unsigned int i = 0; i < bulletVector.size(); i++) {
-		this->removeChild(bulletVector[i]);
-		delete bulletVector[i];
-	}
-	bulletVector.clear();
-
-	//delete enemies on close program
-	for (unsigned int i = 0; i < enemyVector.size(); i++) {
-		this->removeChild(enemyVector[i]);
-		delete enemyVector[i];
-	}
-
-	//delete enemybulletvector
-	for (unsigned int i = 0; i < enemyBulletVector.size(); i++) {
-		this->removeChild(enemyBulletVector[i]);
-		delete enemyBulletVector[i];
-	}
-
-	//delete platformvector
-	for (unsigned int i = 0; i < platformVector.size(); i++) {
-		this->removeChild(platformVector[i]);
-		delete platformVector[i];
-	}
-
-	for (unsigned int i = 0; i < backgroundVector.size(); i++) {
-		this->removeChild(backgroundVector[i]);
-		delete backgroundVector[i];
-	}
-
-	// deconstruct and delete the Tree
-	//this->removeChild(myentity);
-	this->removeChild(MyCoolGuy1);
-
-	// delete myentity from the heap (there was a 'new' in the constructor)
-	//delete myentity;
-	delete MyCoolGuy1;
-}
-
-void MyScene::update(float deltaTime)
-{
-
-	healthbar->position = Point2(camera()->position.x - 500, 200);
-
-	//velocity to camera
-	camera()->position += cameraVelocity * deltaTime;
-
-	timerText->position = Point2(healthbar->position.x + 900, 200);
-	std::stringstream ts;
-	ts << countuptimer.seconds();
-	timerText->message(ts.str());
-
-	// ###############################################################
-	// Escape key stops the Scene
-	// ###############################################################
-	if (input()->getKeyUp( GLFW_KEY_ESCAPE )) {
-		this->stop();
-	}
-
-	//basic movement right
-	if (input()->getKey(GLFW_KEY_D)) {
-		MyCoolGuy1->right(deltaTime);
-		turned = false;
-		semiTurned = false;
-	}
-
-	//basic movement left
-	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-		MyCoolGuy1->leftR(deltaTime);
-		turned = false;
-		semiTurned = true;
-	}
-	
-	if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-		MyCoolGuy1->left(deltaTime);
-		turned = true;
-		semiTurned = false;
-	}
-
-	//basic player jump
-	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground || 
-		(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
-		MyCoolGuy1->jump(deltaTime);
-	}
-
-	//player shoot
-	if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
-		bulletspawn();
-	}
-
-	//keep player on ground level
-	if (MyCoolGuy1->position.y > ground) {
-		MyCoolGuy1->velocity.y = 0;
-		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
-	}
-
-	//keeps test enemy on the ground
-	for (int i = 0; i < enemyVector.size(); i++) {
-		if (enemyVector[i]->position.y > ground) {
-			enemyVector[i]->velocity.y = 0;
-			enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
-		}
-	}
-
-	//make bullet come out of correct end of tank
-	if (turned) {
-		xoffset = -85;
-		cameraOffset = -300;
-	}
-	else {
-		xoffset = 85;
-		cameraOffset = 300;
-	}
-
-	//make bullet come out of correct end of enemy
-	if (Eturned) {
-		eXoffset = -85;
-	}
-	else {
-		eXoffset = 85;
-	}
-
-	playerOnPlatform();
-	enemyBulletShootHandler();
-	animationController();
-	enemyAnimationController();
-	bulletTest();
-	enemyMovement(deltaTime);
-	enemyBulletDespawnOnHitGround();
-	bulletDespawnOnHitGround();
-	cameraController();
-	healthAnimationController();
-
+	deathText = new Text();
 }
 
 void MyScene::backgroundSpawn(int xpos) {

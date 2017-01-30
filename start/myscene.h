@@ -77,6 +77,8 @@ public:
 
 	void MyScene::backgroundSpawn(int xpos);
 
+	void MyScene::worldBuild();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
@@ -84,6 +86,8 @@ public:
 	bool isFiring;
 	bool isFiringD;
 	bool fireTimer;
+
+	bool alive;
 
 	bool onP;
 
@@ -122,6 +126,8 @@ private:
 	std::vector<Background*> backgroundVector;
 
 	Text* timerText;
+
+	Text* deathText;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
