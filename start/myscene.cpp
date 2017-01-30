@@ -11,44 +11,7 @@ MyScene::MyScene() : Scene()
 
 MyScene::~MyScene()
 {
-	//delete bullets on close program
-	for (unsigned int i = 0; i < bulletVector.size(); i++) {
-		this->removeChild(bulletVector[i]);
-		delete bulletVector[i];
-	}
-	bulletVector.clear();
-
-	//delete enemies on close program
-	for (unsigned int i = 0; i < enemyVector.size(); i++) {
-		this->removeChild(enemyVector[i]);
-		delete enemyVector[i];
-	}
-
-	//delete enemybulletvector
-	for (unsigned int i = 0; i < enemyBulletVector.size(); i++) {
-		this->removeChild(enemyBulletVector[i]);
-		delete enemyBulletVector[i];
-	}
-
-	//delete platformvector
-	for (unsigned int i = 0; i < platformVector.size(); i++) {
-		this->removeChild(platformVector[i]);
-		delete platformVector[i];
-	}
-
-	//delete backgroundvector
-	for (unsigned int i = 0; i < backgroundVector.size(); i++) {
-		this->removeChild(backgroundVector[i]);
-		delete backgroundVector[i];
-	}
-
-	// deconstruct and delete the Tree
-	//this->removeChild(myentity);
-	this->removeChild(MyCoolGuy1);
-
-	// delete myentity from the heap (there was a 'new' in the constructor)
-	//delete myentity;
-	delete MyCoolGuy1;
+	worldDelete();
 }
 
 void MyScene::update(float deltaTime)
@@ -175,6 +138,7 @@ void MyScene::update(float deltaTime)
 }
 
 void MyScene::worldBuild() {
+	
 	//spawns backgrounds
 	backgroundSpawn(0);
 	backgroundSpawn(4096);
@@ -245,6 +209,51 @@ void MyScene::worldBuild() {
 	this->addChild(timerText);
 
 	deathText = new Text();
+}
+
+void MyScene::worldDelete() {
+	//delete bullets on close program
+	for (unsigned int i = 0; i < bulletVector.size(); i++) {
+		this->removeChild(bulletVector[i]);
+		delete bulletVector[i];
+	}
+	bulletVector.clear();
+
+	//delete enemies on close program
+	for (unsigned int i = 0; i < enemyVector.size(); i++) {
+		this->removeChild(enemyVector[i]);
+		delete enemyVector[i];
+	}
+	enemyVector.clear();
+
+	//delete enemybulletvector
+	for (unsigned int i = 0; i < enemyBulletVector.size(); i++) {
+		this->removeChild(enemyBulletVector[i]);
+		delete enemyBulletVector[i];
+	}
+	enemyBulletVector.clear();
+
+	//delete platformvector
+	for (unsigned int i = 0; i < platformVector.size(); i++) {
+		this->removeChild(platformVector[i]);
+		delete platformVector[i];
+	}
+	platformVector.clear();
+
+	//delete backgroundvector
+	for (unsigned int i = 0; i < backgroundVector.size(); i++) {
+		this->removeChild(backgroundVector[i]);
+		delete backgroundVector[i];
+	}
+	backgroundVector.clear();
+
+	// deconstruct and delete the Tree
+	//this->removeChild(myentity);
+	this->removeChild(MyCoolGuy1);
+
+	// delete myentity from the heap (there was a 'new' in the constructor)
+	//delete myentity;
+	delete MyCoolGuy1;
 }
 
 void MyScene::backgroundSpawn(int xpos) {

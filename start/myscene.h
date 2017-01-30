@@ -79,6 +79,8 @@ public:
 
 	void MyScene::worldBuild();
 
+	void MyScene::worldDelete();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
