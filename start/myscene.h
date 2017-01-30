@@ -129,8 +129,8 @@ private:
 	std::vector<Background*> backgroundVector;
 
 	Text* timerText;
-
 	Text* deathText;
+	Text* pauseText;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;

@@ -132,8 +132,16 @@ void MyScene::update(float deltaTime)
 				}
 			}
 
+			countuptimer.pause();
+
+			this->addChild(pauseText);
+			pauseText->message("game is paused, press P to continue!");
+			pauseText->position = Point2(healthbar->position.x , 500);
+
 			if (input()->getKeyDown(GLFW_KEY_P)) {
+				this->removeChild(pauseText);
 				paused = false;
+				countuptimer.unpause();
 			}
 		}
 	}
@@ -240,6 +248,8 @@ void MyScene::worldBuild() {
 	this->addChild(timerText);
 
 	deathText = new Text();
+
+	pauseText = new Text();
 }
 
 void MyScene::worldDelete() {
