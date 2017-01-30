@@ -17,97 +17,125 @@ MyScene::~MyScene()
 void MyScene::update(float deltaTime)
 {
 	if (playerHealth != 0) {
-		
-		healthbar->position = Point2(camera()->position.x - 500, 200);
+		if (!paused) {
 
-		//velocity to camera
-		camera()->position += cameraVelocity * deltaTime;
+			healthbar->position = Point2(camera()->position.x - 500, 200);
 
-		timerText->position = Point2(healthbar->position.x + 900, 200);
-		std::stringstream ts;
-		ts << countuptimer.seconds();
-		timerText->message(ts.str());
+			//velocity to camera
+			camera()->position += cameraVelocity * deltaTime;
 
-		// ###############################################################
-		// Escape key stops the Scene
-		// ###############################################################
-		if (input()->getKeyUp( GLFW_KEY_ESCAPE )) {
-			this->stop();
+			timerText->position = Point2(healthbar->position.x + 900, 200);
+			std::stringstream ts;
+			ts << countuptimer.seconds();
+			timerText->message(ts.str());
+
+			// ###############################################################
+			// Escape key stops the Scene
+			// ###############################################################
+			if (input()->getKeyUp(GLFW_KEY_ESCAPE)) {
+				this->stop();
+			}
+
+			// ###############################################################
+			// P pause the scene
+			// ###############################################################
+			if (input()->getKeyDown(GLFW_KEY_P)) {
+				paused = true;
+			}
+
+			//basic movement right
+			if (input()->getKey(GLFW_KEY_D)) {
+				MyCoolGuy1->right(deltaTime);
+				turned = false;
+				semiTurned = false;
+			}
+
+			//basic movement left
+			if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+				MyCoolGuy1->leftR(deltaTime);
+				turned = false;
+				semiTurned = true;
+			}
+
+			if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+				MyCoolGuy1->left(deltaTime);
+				turned = true;
+				semiTurned = false;
+			}
+
+			//basic player jump
+			if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground ||
+				(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
+				MyCoolGuy1->jump(deltaTime);
+			}
+
+			//player shoot
+			if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+				bulletspawn();
+			}
+
+			//keep player on ground level
+			if (MyCoolGuy1->position.y > ground) {
+				MyCoolGuy1->velocity.y = 0;
+				MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
+			}
+
+			//keeps test enemy on the ground
+			for (int i = 0; i < enemyVector.size(); i++) {
+				if (enemyVector[i]->position.y > ground) {
+					enemyVector[i]->velocity.y = 0;
+					enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+				}
+			}
+
+			//make bullet come out of correct end of tank
+			if (turned) {
+				xoffset = -85;
+				cameraOffset = -300;
+			}
+			else {
+				xoffset = 85;
+				cameraOffset = 300;
+			}
+
+			//make bullet come out of correct end of enemy
+			if (Eturned) {
+				eXoffset = -85;
+			}
+			else {
+				eXoffset = 85;
+			}
+
+			playerOnPlatform();
+			enemyBulletShootHandler();
+			animationController();
+			enemyAnimationController();
+			bulletTest();
+			enemyMovement(deltaTime);
+			enemyBulletDespawnOnHitGround();
+			bulletDespawnOnHitGround();
+			cameraController();
+			healthAnimationController();
 		}
+		else if (paused) {
+			//keep player on ground level
+			if (MyCoolGuy1->position.y > ground) {
+				MyCoolGuy1->velocity.y = 0;
+				MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
+			}
 
-		//basic movement right
-		if (input()->getKey(GLFW_KEY_D)) {
-			MyCoolGuy1->right(deltaTime);
-			turned = false;
-			semiTurned = false;
-		}
+			//keeps test enemy on the ground
+			for (int i = 0; i < enemyVector.size(); i++) {
+				if (enemyVector[i]->position.y > ground) {
+					enemyVector[i]->velocity.y = 0;
+					enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+				}
+			}
 
-		//basic movement left
-		if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-			MyCoolGuy1->leftR(deltaTime);
-			turned = false;
-			semiTurned = true;
-		}
-	
-		if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-			MyCoolGuy1->left(deltaTime);
-			turned = true;
-			semiTurned = false;
-		}
-
-		//basic player jump
-		if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground || 
-			(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
-			MyCoolGuy1->jump(deltaTime);
-		}
-
-		//player shoot
-		if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
-			bulletspawn();
-		}
-
-		//keep player on ground level
-		if (MyCoolGuy1->position.y > ground) {
-			MyCoolGuy1->velocity.y = 0;
-			MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
-		}
-
-		//keeps test enemy on the ground
-		for (int i = 0; i < enemyVector.size(); i++) {
-			if (enemyVector[i]->position.y > ground) {
-				enemyVector[i]->velocity.y = 0;
-				enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+			if (input()->getKeyDown(GLFW_KEY_P)) {
+				paused = false;
 			}
 		}
-
-		//make bullet come out of correct end of tank
-		if (turned) {
-			xoffset = -85;
-			cameraOffset = -300;
-		}
-		else {
-			xoffset = 85;
-			cameraOffset = 300;
-		}
-
-		//make bullet come out of correct end of enemy
-		if (Eturned) {
-			eXoffset = -85;
-		}
-		else {
-			eXoffset = 85;
-		}
-
-		playerOnPlatform();
-		enemyBulletShootHandler();
-		animationController();
-		enemyAnimationController();
-		bulletTest();
-		enemyMovement(deltaTime);
-		enemyBulletDespawnOnHitGround();
-		bulletDespawnOnHitGround();
-		cameraController();
-		healthAnimationController();
 	}
 
 	else if (playerHealth <= 0) {
@@ -138,6 +166,9 @@ void MyScene::update(float deltaTime)
 }
 
 void MyScene::worldBuild() {
+
+	//sets paused default to false
+	paused = false;
 	
 	//spawns backgrounds
 	backgroundSpawn(0);

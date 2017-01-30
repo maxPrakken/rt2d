@@ -90,6 +90,7 @@ public:
 	bool fireTimer;
 
 	bool alive;
+	bool paused;
 
 	bool onP;
 
