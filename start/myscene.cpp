@@ -135,7 +135,7 @@ void MyScene::update(float deltaTime)
 			countuptimer.pause();
 
 			this->addChild(pauseText);
-			pauseText->message("game is paused, press P to continue!");
+			pauseText->message("game is paused, press P to continue!", BLUE);
 			pauseText->position = Point2(healthbar->position.x , 500);
 
 			if (input()->getKeyDown(GLFW_KEY_P)) {
@@ -148,7 +148,7 @@ void MyScene::update(float deltaTime)
 
 	else if (playerHealth <= 0) {
 		this->addChild(deathText);
-		deathText->message("you died, press R to restart");
+		deathText->message("you died, press R to restart", RED);
 		deathText->position = Point2(healthbar->position.x + 100, 500);
 
 		//keep player on ground level
@@ -668,12 +668,12 @@ void MyScene::enemyMovement(float deltaTime) {
 			inShootingRange = true;
 
 			if (enemyVector[i]->position.x > MyCoolGuy1->position.x) {
-				enemyVector[i]->position += Point2(-300, 0) * deltaTime;
+				enemyVector[i]->position += Point2(-250, 0) * deltaTime;
 				enemyVector[i]->scale = Point(1.0f, 1.0f);
 				Eturned = true;
 			}
 			else {
-				enemyVector[i]->position += Point2(300, 0) * deltaTime;
+				enemyVector[i]->position += Point2(250, 0) * deltaTime;
 				enemyVector[i]->scale = Point(-1.0f, 1.0f);
 				Eturned = false;
 			}
