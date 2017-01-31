@@ -204,6 +204,8 @@ add_executable(start
 	start/ebullet.h
 	start/health.cpp
 	start/health.h
+	start/finishline.cpp
+	start/finishline.h
 )
 target_link_libraries(start
 	${ALL_LIBS}

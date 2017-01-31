@@ -22,6 +22,7 @@
 #include "enemies.h"
 #include "ebullet.h"
 #include "health.h"
+#include "finishline.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
@@ -63,6 +64,12 @@ public:
 	/// @brief makes it easier to print into the console
 	void MyScene::print(std::string string);
 
+	void MyScene::print(int i);
+
+	void MyScene::print(int i, int x);
+
+	void MyScene::print(float i);
+
 	/// @brief enemy AI
 	void MyScene::enemyMovement(float deltaTime);
 
@@ -95,6 +102,10 @@ public:
 
 	void MyScene::enemyOnPlatform();
 
+	void MyScene::finishCollision();
+
+	void MyScene::PandEonGround();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;
@@ -105,6 +116,7 @@ public:
 
 	bool alive;
 	bool paused;
+	bool finished;
 
 	bool onP;
 
@@ -133,6 +145,8 @@ private:
 
 	CoolGuy* MyCoolGuy1;
 
+	Finishline* finishline;
+
 	std::vector<Bullet*> bulletVector;
 
 	std::vector<Ebullet*> enemyBulletVector;
@@ -146,6 +160,9 @@ private:
 	Text* timerText;
 	Text* deathText;
 	Text* pauseText;
+	Text* finishText;
+	Text* finishText2;
+	Text* finishText3;
 
 	Timer t;
 	Timer s;

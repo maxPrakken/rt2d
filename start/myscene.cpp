@@ -16,165 +16,167 @@ MyScene::~MyScene()
 
 void MyScene::update(float deltaTime)
 {
-	if (playerHealth != 0) {
-		if (!paused) {
+	if (!finished) {
+		if (playerHealth != 0) {
+			if (!paused) {
 
-			if (playerHealth >= 8) {
-				playerHealth = 8;
-			}
+				//std::cout << playerHealth << std::endl;
 
-			healthbar->position = Point2(camera()->position.x - 500, 200);
-
-			//velocity to camera
-			camera()->position += cameraVelocity * deltaTime;
-
-			timerText->position = Point2(healthbar->position.x + 900, 200);
-			std::stringstream ts;
-			ts << countuptimer.seconds();
-			timerText->message(ts.str());
-
-			// ###############################################################
-			// Escape key stops the Scene
-			// ###############################################################
-			if (input()->getKeyUp(GLFW_KEY_ESCAPE)) {
-				this->stop();
-			}
-
-			// ###############################################################
-			// P pause the scene
-			// ###############################################################
-			if (input()->getKeyDown(GLFW_KEY_P)) {
-				paused = true;
-			}
-
-			//basic movement right
-			if (input()->getKey(GLFW_KEY_D)) {
-				MyCoolGuy1->right(deltaTime);
-				turned = false;
-				semiTurned = false;
-			}
-
-			//basic movement left
-			if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-				MyCoolGuy1->leftR(deltaTime);
-				turned = false;
-				semiTurned = true;
-			}
-
-			if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-				MyCoolGuy1->left(deltaTime);
-				turned = true;
-				semiTurned = false;
-			}
-
-			//basic player jump
-			if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground ||
-				(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
-				MyCoolGuy1->jump(deltaTime);
-			}
-
-			//player shoot
-			if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
-				bulletspawn();
-			}
-
-			//keep player on ground level
-			if (MyCoolGuy1->position.y > ground) {
-				MyCoolGuy1->velocity.y = 0;
-				MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
-			}
-
-			//keeps test enemy on the ground
-			for (int i = 0; i < enemyVector.size(); i++) {
-				if (enemyVector[i]->position.y > ground) {
-					enemyVector[i]->velocity.y = 0;
-					enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
+				if (playerHealth >= 16) {
+					playerHealth = 16;
 				}
-			}
 
-			//make bullet come out of correct end of tank
-			if (turned) {
-				xoffset = -85;
-				cameraOffset = -300;
-			}
-			else {
-				xoffset = 85;
-				cameraOffset = 300;
-			}
+				healthbar->position = Point2(camera()->position.x - 500, 200);
 
-			//make bullet come out of correct end of enemy
-			if (Eturned) {
-				eXoffset = -85;
-			}
-			else {
-				eXoffset = 85;
-			}
+				//velocity to camera
+				camera()->position += cameraVelocity * deltaTime;
 
-			playerOnPlatform();
-			enemyBulletShootHandler();
-			animationController();
-			enemyAnimationController();
-			bulletTest();
-			enemyMovement(deltaTime);
-			enemyBulletDespawnOnHitGround();
-			bulletDespawnOnHitGround();
-			cameraController();
-			healthAnimationController();
-			enemyOnPlatform();
-		}
+				timerText->position = Point2(healthbar->position.x + 900, 200);
+				std::stringstream ts;
+				ts << countuptimer.seconds();
+				timerText->message(ts.str());
+
+				// ###############################################################
+				// Escape key stops the Scene
+				// ###############################################################
+				if (input()->getKeyUp(GLFW_KEY_ESCAPE)) {
+					this->stop();
+				}
+
+				// ###############################################################
+				// P pause the scene
+				// ###############################################################
+				if (input()->getKeyDown(GLFW_KEY_P)) {
+					paused = true;
+				}
+
+				//basic movement right
+				if (input()->getKey(GLFW_KEY_D)) {
+					MyCoolGuy1->right(deltaTime);
+					turned = false;
+					semiTurned = false;
+				}
+
+				//basic movement left
+				if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+					MyCoolGuy1->leftR(deltaTime);
+					turned = false;
+					semiTurned = true;
+				}
+
+				if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+					MyCoolGuy1->left(deltaTime);
+					turned = true;
+					semiTurned = false;
+				}
+
+				//basic player jump
+				if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground ||
+					(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
+					MyCoolGuy1->jump(deltaTime);
+				}
+
+				//player shoot
+				if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+					bulletspawn();
+				}
+
+				PandEonGround();
+
+				//make bullet come out of correct end of tank
+				if (turned) {
+					xoffset = -85;
+					cameraOffset = -300;
+				}
+				else {
+					xoffset = 85;
+					cameraOffset = 300;
+				}
+
+				//make bullet come out of correct end of enemy
+				if (Eturned) {
+					eXoffset = -85;
+				}
+				else {
+					eXoffset = 85;
+				}
+
+				playerOnPlatform();
+				enemyBulletShootHandler();
+				animationController();
+				enemyAnimationController();
+				bulletTest();
+				enemyMovement(deltaTime);
+				enemyBulletDespawnOnHitGround();
+				bulletDespawnOnHitGround();
+				cameraController();
+				healthAnimationController();
+				enemyOnPlatform();
+				finishCollision();
+			}
 		else if (paused) {
-			//keep player on ground level
-			if (MyCoolGuy1->position.y > ground) {
-				MyCoolGuy1->velocity.y = 0;
-				MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
-			}
-
-			//keeps test enemy on the ground
-			for (int i = 0; i < enemyVector.size(); i++) {
-				if (enemyVector[i]->position.y > ground) {
-					enemyVector[i]->velocity.y = 0;
-					enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
-				}
-			}
-
+			PandEonGround();
 			countuptimer.pause();
 
-			this->addChild(pauseText);
-			pauseText->message("game is paused, press P to continue!", BLUE);
-			pauseText->position = Point2(healthbar->position.x , 500);
+				this->addChild(pauseText);
+				pauseText->message("game is paused, press P to continue!", BLUE);
+				pauseText->position = Point2(healthbar->position.x, 500);
 
-			if (input()->getKeyDown(GLFW_KEY_P)) {
-				this->removeChild(pauseText);
-				paused = false;
-				countuptimer.unpause();
+				if (input()->getKeyDown(GLFW_KEY_P)) {
+					this->removeChild(pauseText);
+					paused = false;
+					countuptimer.unpause();
+				}
+			}
+		}
+
+		else if (playerHealth <= 0) {
+			this->addChild(deathText);
+			deathText->message("you died, press R to restart", RED);
+			deathText->position = Point2(healthbar->position.x + 100, 500);
+
+			PandEonGround();
+
+			if (input()->getKey(GLFW_KEY_R)) {
+				playerHealth = 8;
+				this->removeChild(deathText);
+				worldDelete();
+				worldBuild();
+			}
+		}
+	}
+	else if (finished == true) {
+			PandEonGround();
+			countuptimer.pause();
+			this->addChild(finishText);
+			this->addChild(finishText2);
+			this->addChild(finishText3);
+			finishText->message("you finished Heavy Steel!", BLUE);
+			finishText->position = Point2(healthbar->position.x + 150, 400);
+			finishText2->message("Tank you for playing.", BLUE);
+			finishText2->position = Point2(healthbar->position.x + 150, 500);
+			finishText3->message("Press R to restart the game.", BLUE);
+			finishText3->position = Point2(healthbar->position.x + 150, 600);
+			if (input()->getKeyDown(GLFW_KEY_R)) {
+				worldDelete();
+				worldBuild();
 			}
 		}
 	}
 
-	else if (playerHealth <= 0) {
-		this->addChild(deathText);
-		deathText->message("you died, press R to restart", RED);
-		deathText->position = Point2(healthbar->position.x + 100, 500);
 
-		//keep player on ground level
-		if (MyCoolGuy1->position.y > ground) {
-			MyCoolGuy1->velocity.y = 0;
-			MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
-		}
+void MyScene::PandEonGround() {
+	//keep player on ground level
+	if (MyCoolGuy1->position.y > ground) {
+		MyCoolGuy1->velocity.y = 0;
+		MyCoolGuy1->position = Point2(MyCoolGuy1->position.x, ground);
+	}
 
-		//keeps test enemy on the ground
-		for (int i = 0; i < enemyVector.size(); i++) {
-			if (enemyVector[i]->position.y > ground) {
-				enemyVector[i]->velocity.y = 0;
-				enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
-			}
-		}
-
-		if (input()->getKey(GLFW_KEY_R)) {
-			playerHealth = 8;
-			this->removeChild(deathText);
-			worldDelete();
-			worldBuild();
+	//keeps test enemy on the ground
+	for (int i = 0; i < enemyVector.size(); i++) {
+		if (enemyVector[i]->position.y > ground) {
+			enemyVector[i]->velocity.y = 0;
+			enemyVector[i]->position = Point2(enemyVector[i]->position.x, ground);
 		}
 	}
 }
@@ -183,6 +185,9 @@ void MyScene::worldBuild() {
 
 	//sets paused default to false
 	paused = false;
+
+	//checks if the player finished the game
+	finished = false;
 
 	//makes enemies stay on platforms
 	toSet = 0;
@@ -198,16 +203,40 @@ void MyScene::worldBuild() {
 	MyCoolGuy1 = new CoolGuy();
 	MyCoolGuy1->position = Point2(500, 680);
 
-	//first enemy spawn out vector
-	enemySpawn(600, 680);
-	enemySpawn(400, 680);
+	//finishline spawn
+	finishline = new Finishline();
+	finishline->position = Point2(14000, 600);
+	this->addChild(finishline);
 
-	enemySpawn(500.0f, 500);
+	//all enemies in the world
+	enemySpawn(3550, 680);
+	enemySpawn(3750, 680);
+	enemySpawn(5900, 680);
+	enemySpawn(5900, 590);
+	enemySpawn(7000, 680);
+	enemySpawn(7200, 590);
+	enemySpawn(8300, 680);
+	enemySpawn(10496, 680);
+	enemySpawn(10600, 680);
+	enemySpawn(12200, 680);
+	enemySpawn(12288, 680);
+	enemySpawn(12444, 680);
+	enemySpawn(12444, 590);
 
 	//spawn platforms
-	platformSpawn(500, 600);
+	platformSpawn(1900, 600);
+	platformSpawn(3500, 600);
+	platformSpawn(3700, 600);
+	platformSpawn(5644, 600);
+	platformSpawn(5900, 600);
+	platformSpawn(6300, 690);
+	platformSpawn(7200, 600);
+	platformSpawn(10240, 600);
+	platformSpawn(10496, 690);
+	platformSpawn(12288, 690);
+	platformSpawn(12544, 600);
 
-	playerHealth = 8;
+	playerHealth = 16;
 
 	//camera offset
 	cameraOffset = 300;
@@ -259,8 +288,10 @@ void MyScene::worldBuild() {
 	this->addChild(timerText);
 
 	deathText = new Text();
-
 	pauseText = new Text();
+	finishText = new Text();
+	finishText2 = new Text();
+	finishText3 = new Text();
 }
 
 void MyScene::worldDelete() {
@@ -308,6 +339,12 @@ void MyScene::worldDelete() {
 	delete MyCoolGuy1;
 }
 
+void MyScene::finishCollision() {
+	if (MyCoolGuy1->isCollidingWith(finishline)) {
+		finished = true;
+	}
+}
+
 void MyScene::backgroundSpawn(int xpos) {
 		//background initialise
 		Background* background1 = new Background();
@@ -317,16 +354,16 @@ void MyScene::backgroundSpawn(int xpos) {
 }
 
 void MyScene::healthAnimationController() {
-	if (playerHealth == 7 || playerHealth == 8) {
+	if (playerHealth >= 13) {
 		healthAnimationHandler(4, 4);
 	}
-	else if (playerHealth == 5 || playerHealth == 6) {
+	else if (playerHealth >= 8 || playerHealth <= 12) {
 		healthAnimationHandler(5, 5);
 	}
-	else if (playerHealth == 3 || playerHealth == 4) {
+	else if (playerHealth >= 4 || playerHealth <= 8) {
 		healthAnimationHandler(2, 2);
 	}
-	else if (playerHealth == 1 || playerHealth == 2) {
+	else if (playerHealth >= 1 || playerHealth <= 3) {
 		healthAnimationHandler(0, 0);
 	}
 	else {
@@ -614,7 +651,6 @@ void MyScene::enemyOnPlatform() {
 		std::vector<Platform*>::iterator it = platformVector.begin();
 		while (it != platformVector.end()) {
 			if ((*it)->isCollidingWith((*that))) {
-				print("hitting");
 				toSet = 1;
 				(*that)->velocity.y = 0;
 				(*that)->position = Point2((*that)->position.x, (*it)->position.y - 80);
@@ -624,7 +660,6 @@ void MyScene::enemyOnPlatform() {
 			}
 		}
 		if (toSet == 1) {
-			print("shiiiiit");
 		}
 		else {
 			that++;
@@ -644,6 +679,18 @@ void MyScene::enemyDeSpawn() {
 
 void MyScene::print(std::string string) {
 	std::cout << string << std::endl;
+}
+
+void MyScene::print(int i) {
+	std::cout << i << std::endl;
+}
+
+void MyScene::print(int i, int x) {
+	std::cout << i << x << std::endl;
+}
+
+void MyScene::print(float i) {
+	std::cout << i << std::endl;
 }
 
 void MyScene::enemyBulletSpawn() {
