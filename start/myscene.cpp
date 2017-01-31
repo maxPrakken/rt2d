@@ -120,6 +120,7 @@ void MyScene::update(float deltaTime)
 			bulletDespawnOnHitGround();
 			cameraController();
 			healthAnimationController();
+			enemyOnPlatform();
 		}
 		else if (paused) {
 			//keep player on ground level
@@ -172,6 +173,7 @@ void MyScene::update(float deltaTime)
 		if (input()->getKey(GLFW_KEY_R)) {
 			playerHealth = 8;
 			this->removeChild(deathText);
+			worldDelete();
 			worldBuild();
 		}
 	}
@@ -181,6 +183,9 @@ void MyScene::worldBuild() {
 
 	//sets paused default to false
 	paused = false;
+
+	//makes enemies stay on platforms
+	toSet = 0;
 	
 	//spawns backgrounds
 	backgroundSpawn(0);
@@ -191,14 +196,16 @@ void MyScene::worldBuild() {
 
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
-	MyCoolGuy1->position = Point2(0, 680);
+	MyCoolGuy1->position = Point2(500, 680);
 
 	//first enemy spawn out vector
-	enemySpawn(600.0f, 680.0f);
-	enemySpawn(400.0f, 680.0f);
+	enemySpawn(600, 680);
+	enemySpawn(400, 680);
+
+	enemySpawn(500.0f, 500);
 
 	//spawn platforms
-	platformSpawn(500.0f, 600.0f);
+	platformSpawn(500, 600);
 
 	playerHealth = 8;
 
@@ -547,7 +554,7 @@ void MyScene::bulletTest() {
 				delete b;
 				print("hitting");
 				todelete = 1;
-				playerHealth += 2;
+				playerHealth += 1;
 			}
 			else {
 				it++;
@@ -566,7 +573,7 @@ void MyScene::bulletTest() {
 	
 }
 
-void MyScene::enemySpawn(float x, float y) {
+void MyScene::enemySpawn(int x, int y) {
 	Enemy* enemy = new Enemy();
 	enemy->position = Point2(x, y);
 
@@ -575,7 +582,7 @@ void MyScene::enemySpawn(float x, float y) {
 	print("im spawning a enemy");
 }
 
-void MyScene::platformSpawn(float x, float y) {
+void MyScene::platformSpawn(int x, int y) {
 	Platform* platform = new Platform();
 	platform->position = Point2(x, y);
 
@@ -597,6 +604,31 @@ void MyScene::playerOnPlatform() {
 			onP = false;
 		}
 		it++;
+	}
+}
+
+void MyScene::enemyOnPlatform() {
+	std::vector<Enemy*>::iterator that = enemyVector.begin();
+	while (that != enemyVector.end()) {
+		toSet = 0;
+		std::vector<Platform*>::iterator it = platformVector.begin();
+		while (it != platformVector.end()) {
+			if ((*it)->isCollidingWith((*that))) {
+				print("hitting");
+				toSet = 1;
+				(*that)->velocity.y = 0;
+				(*that)->position = Point2((*that)->position.x, (*it)->position.y - 80);
+			}
+			else {
+				it++;
+			}
+		}
+		if (toSet == 1) {
+			print("shiiiiit");
+		}
+		else {
+			that++;
+		}
 	}
 }
 

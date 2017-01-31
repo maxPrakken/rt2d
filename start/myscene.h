@@ -55,7 +55,7 @@ public:
 	void MyScene::bulletTest();
 
 	/// @brief spawns enemy at certain position
-	void MyScene::enemySpawn(float x, float y);
+	void MyScene::enemySpawn(int x, int y);
 
 	/// @brief despawns all enemies
 	void MyScene::enemyDeSpawn();
@@ -79,7 +79,7 @@ public:
 
 	void MyScene::cameraController();
 
-	void MyScene::platformSpawn(float x, float y);
+	void MyScene::platformSpawn(int x, int y);
 
 	void MyScene::playerOnPlatform();
 
@@ -92,6 +92,8 @@ public:
 	void MyScene::worldBuild();
 
 	void MyScene::worldDelete();
+
+	void MyScene::enemyOnPlatform();
 
 	bool turned;
 	bool semiTurned;
@@ -109,6 +111,8 @@ public:
 	int xoffset;
 	int eXoffset;
 	int cameraOffset;
+
+	int toSet;
 
 	int playerHealth;
 
