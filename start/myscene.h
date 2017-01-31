@@ -106,6 +106,8 @@ public:
 
 	void MyScene::PandEonGround();
 
+	void MyScene::enemyHitPlayer();
+
 	bool turned;
 	bool semiTurned;
 	bool Eturned;

@@ -9,9 +9,13 @@ EntityMain::~EntityMain() {
 }
 
 bool EntityMain::isCollidingWith(Entity* other) {
-	if ((abs(this->position.x - other->position.x) * 2.0f < (sprite()->size.x  + other->sprite()->size.x)) &&
-		(abs(this->position.y - other->position.y) * 2.0f < (sprite()->size.y  + other->sprite()->size.y )))
+	float dx = this->position.x - other->position.x;
+	float dy = this->position.y - other->position.y;
+
+	if ((abs(dx) * 2.0f < (sprite()->size.x  + other->sprite()->size.x)) &&
+		(abs(dy) * 2.0f < (sprite()->size.y  + other->sprite()->size.y )))
 	{
+		//std::cout << dx << "," << dy << std::endl;
 		return true;
 	}
 	return false;

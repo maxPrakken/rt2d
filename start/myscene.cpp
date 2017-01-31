@@ -21,6 +21,16 @@ void MyScene::update(float deltaTime)
 			if (!paused) {
 
 				//std::cout << playerHealth << std::endl;
+				/*
+				std::vector<Enemy*>::iterator it = enemyVector.begin();
+				while (it != enemyVector.end()) {
+					if ((*it)->position.x == MyCoolGuy1->position.x) {
+						(*it)->velocity = Point2(0, 0);
+					}
+					else {
+
+					}
+				}*/
 
 				if (playerHealth >= 16) {
 					playerHealth = 16;
@@ -113,6 +123,8 @@ void MyScene::update(float deltaTime)
 				healthAnimationController();
 				enemyOnPlatform();
 				finishCollision();
+				enemyHitPlayer();
+
 			}
 		else if (paused) {
 			PandEonGround();
@@ -409,7 +421,24 @@ void MyScene::enemyBulletDespawnOnHitGround() {
 	std::vector<Ebullet*>::iterator it = enemyBulletVector.begin();
 	while (it != enemyBulletVector.end())
 	{
-		if ((*it)->position.y >= 730 || MyCoolGuy1->isCollidingWith((*it))) {
+		if ((*it)->position.y >= 730) {
+			Ebullet* b = (*it);
+			this->removeChild(b);
+			it = enemyBulletVector.erase(it);
+			delete b;
+		}
+		else
+		{
+			it++;
+		}
+	}
+}
+
+void MyScene::enemyHitPlayer() {
+	std::vector<Ebullet*>::iterator it = enemyBulletVector.begin();
+	while (it != enemyBulletVector.end())
+	{
+		if (MyCoolGuy1->isCollidingWith((*it))) {
 			playerHealth -= 1;
 			Ebullet* b = (*it);
 			this->removeChild(b);
@@ -655,15 +684,13 @@ void MyScene::enemyOnPlatform() {
 				(*that)->velocity.y = 0;
 				(*that)->position = Point2((*that)->position.x, (*it)->position.y - 80);
 			}
-			else {
-				it++;
-			}
+			it++;
 		}
 		if (toSet == 1) {
 		}
-		else {
+		//else {
 			that++;
-		}
+		//}
 	}
 }
 
@@ -711,7 +738,7 @@ void MyScene::enemyBulletSpawn() {
 
 			if (Eturned) {
 				Ebullet1->velocity = Vector2(-900, 0);
-				Ebullet1->scale = Point(-1.0f, -1.0f);
+				Ebullet1->scale = Point(-1.0f, 1.0f);
 			}
 			else {
 				Ebullet1->velocity = Vector2(900, 0);

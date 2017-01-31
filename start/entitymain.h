@@ -24,8 +24,11 @@ public:
 	/// @brief basic collision between player and other entity.
 	bool isCollidingWith(Entity* other);
 
-private:
+	
 
+	
+
+private:
 };
 
 #endif
