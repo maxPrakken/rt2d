@@ -13,9 +13,14 @@ class Finishline :
 	public EntityMain
 {
 public:
+	/// @brief Finishline constructor
 	Finishline();
+	/// @brief Finishline virtual deconstructor
 	virtual ~Finishline();
 
+	/// @brief update is automatically called every frame
+	/// @param deltatime, the time elapsed in seconds.
+	/// @return void
 	virtual void update(float deltatime);
 
 private:

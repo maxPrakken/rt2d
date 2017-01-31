@@ -24,6 +24,7 @@ public:
 	/// @brief amound of gravity on enemy in pixels per second.
 	int gravity;
 
+	/// @brief makes detection square around enemy of certain size
 	bool detectionZone(Entity* other, int zonesize);
 
 private:

@@ -13,9 +13,14 @@ class Ebullet :
 	public EntityMain
 {
 public:
+	/// @brief Ebullet constructor
 	Ebullet();
+	/// @brief Ebullet virtual deconstructor
 	virtual ~Ebullet();
 
+	/// @brief update is automatically called every frame
+	/// @param deltatime, time elapsed in seconds.
+	/// @return void.
 	virtual void update(float deltatime);
 
 	/// @brief velocity of bullet in pixels per second.

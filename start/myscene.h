@@ -81,63 +81,98 @@ public:
 
 	/// @brief despawns player bullets on hit ground
 	void MyScene::bulletDespawnOnHitGround();
-
+	
+	/// @brief despawns enemy bullets when they hit the ground
 	void MyScene::enemyBulletDespawnOnHitGround();
 
+	/// @brief camera pan in the right direction
 	void MyScene::cameraController();
 
+	/// @brief spawns platform at set position
 	void MyScene::platformSpawn(int x, int y);
 
+	/// @brief keeps player on platform
 	void MyScene::playerOnPlatform();
 
+	/// @brief goes through healthbar animations
 	void MyScene::healthAnimationController();
 
+	/// @brief handles the healthAnimationController
 	void MyScene::healthAnimationHandler(int y, int x);
 
+	/// @brief spawns background at set position
 	void MyScene::backgroundSpawn(int xpos);
 
+	/// @brief load the constructor
 	void MyScene::worldBuild();
 
+	/// @brief loads the deconstructor
 	void MyScene::worldDelete();
 
+	/// @brief holds enemies on platform
 	void MyScene::enemyOnPlatform();
 
-	void MyScene::finishCollision();
+	/// @brief checks if you're colliding with the finish line
+	void MyScene::finishLineCollision();
 
+	/// @brief keeps player and enemy on the ground during pause or death
 	void MyScene::PandEonGround();
 
+	/// @brief checks if enemy bullet hits player
 	void MyScene::enemyHitPlayer();
 
+	/// @brief checks if player is turned around
 	bool turned;
+	/// @brief checks if player is holding shift while turning around
 	bool semiTurned;
+	/// @brief checks if enemy is turned around
 	bool Eturned;
 
+	/// @brief checks if you're firing
 	bool isFiring;
+	/// @brief checks if you're firing while driving
 	bool isFiringD;
+	/// @brief gives shooting a delay
 	bool fireTimer;
 
+	/// @brief checks if player is alive
 	bool alive;
+	/// @brief check if game is paused
 	bool paused;
+	/// @brief check if game is finished
 	bool finished;
 
+	/// @brief checks if player is on a platform
 	bool onP;
 
+	/// @brief makes bullet come out of right side of the tank
 	int xoffset;
+	/// @brief checks if enemy bullet comes out of right side of the enemy tank
 	int eXoffset;
+	/// @brief gives a offset to the camera
 	int cameraOffset;
 
+	/// @brief makes enemies not fall through platforms
 	int toSet;
 
+	/// @brief amound of health the player has
 	int playerHealth;
 
+	/// @brief checks if enemy is idle
 	bool Eidle;
+	/// @brief checks if enemy is shooting
 	bool Eshooting;
+	/// @brief checks if enemy is driving
 	bool Edriving;
+	/// @brief checks if enemy is drving and shooting at the same time
 	bool Edrivingshooting;
+	/// @brief boolean to keep animation overwriting in check
 	bool EisFiring;
 
+	/// @brief checks if player is in shooting range of enemies
 	bool inShootingRange;
 
+	/// @brief speed of the camera
 	Vector2 cameraVelocity;
 
 private:

@@ -112,7 +112,7 @@ void MyScene::update(float deltaTime)
 				cameraController();
 				healthAnimationController();
 				enemyOnPlatform();
-				finishCollision();
+				finishLineCollision();
 				enemyHitPlayer();
 
 			}
@@ -341,7 +341,7 @@ void MyScene::worldDelete() {
 	delete MyCoolGuy1;
 }
 
-void MyScene::finishCollision() {
+void MyScene::finishLineCollision() {
 	if (MyCoolGuy1->isCollidingWith(finishline)) {
 		finished = true;
 	}
@@ -750,6 +750,7 @@ void MyScene::enemyBulletShootHandler() {
 }
 
 void MyScene::enemyMovement(float deltaTime) {
+	
 	for (int i = 0; i < enemyVector.size(); i++) {
 		//stop zone, stops the enemy if he is close enough and starts shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
