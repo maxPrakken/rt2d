@@ -39,28 +39,40 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
+	/// @brief spawns player bullets
 	void MyScene::bulletspawn();
 
+	/// @brief animation controller for player
 	void MyScene::animationController();
 
+	/// @brief animation controller for enemy
 	void MyScene::enemyAnimationController();
 
+	/// @brief animation handler for player
 	void MyScene::animationHandler(int y, int x);
 
+	/// @brief test if player bullets hit enemy
 	void MyScene::bulletTest();
 
+	/// @brief spawns enemy at certain position
 	void MyScene::enemySpawn(float x, float y);
 
+	/// @brief despawns all enemies
 	void MyScene::enemyDeSpawn();
 
+	/// @brief makes it easier to print into the console
 	void MyScene::print(std::string string);
 
+	/// @brief enemy AI
 	void MyScene::enemyMovement(float deltaTime);
 
+	/// @brief spawns enemy bullets at enemy position
 	void MyScene::enemyBulletSpawn();
 
+	/// @brief makes enemies schoot when they are allowed to
 	void MyScene::enemyBulletShootHandler();
 
+	/// @brief despawns player bullets on hit ground
 	void MyScene::bulletDespawnOnHitGround();
 
 	void MyScene::enemyBulletDespawnOnHitGround();
@@ -111,7 +123,6 @@ public:
 	Vector2 cameraVelocity;
 
 private:
-	/// @brief the rotating square in the middle of the screen
 	//MyEntity* myentity;
 
 	Health* healthbar;
@@ -132,7 +143,6 @@ private:
 	Text* deathText;
 	Text* pauseText;
 
-	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 	Timer s;
 	Timer k;

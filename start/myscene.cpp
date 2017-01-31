@@ -19,6 +19,10 @@ void MyScene::update(float deltaTime)
 	if (playerHealth != 0) {
 		if (!paused) {
 
+			if (playerHealth >= 8) {
+				playerHealth = 8;
+			}
+
 			healthbar->position = Point2(camera()->position.x - 500, 200);
 
 			//velocity to camera
@@ -182,16 +186,16 @@ void MyScene::worldBuild() {
 	backgroundSpawn(0);
 	backgroundSpawn(4096);
 	backgroundSpawn(8192);
+	backgroundSpawn(12288);
 	backgroundSpawn(16384);
-	backgroundSpawn(32768);
 
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
-	MyCoolGuy1->position = Point2(200, 680);
+	MyCoolGuy1->position = Point2(0, 680);
 
 	//first enemy spawn out vector
-	enemySpawn(500.0f, 680.0f);
-	enemySpawn(200.0f, 680.0f);
+	enemySpawn(600.0f, 680.0f);
+	enemySpawn(400.0f, 680.0f);
 
 	//spawn platforms
 	platformSpawn(500.0f, 600.0f);
@@ -543,6 +547,7 @@ void MyScene::bulletTest() {
 				delete b;
 				print("hitting");
 				todelete = 1;
+				playerHealth += 2;
 			}
 			else {
 				it++;
