@@ -21,16 +21,6 @@ void MyScene::update(float deltaTime)
 			if (!paused) {
 
 				//std::cout << playerHealth << std::endl;
-				/*
-				std::vector<Enemy*>::iterator it = enemyVector.begin();
-				while (it != enemyVector.end()) {
-					if ((*it)->position.x == MyCoolGuy1->position.x) {
-						(*it)->velocity = Point2(0, 0);
-					}
-					else {
-
-					}
-				}*/
 
 				if (playerHealth >= 16) {
 					playerHealth = 16;
@@ -369,13 +359,13 @@ void MyScene::healthAnimationController() {
 	if (playerHealth >= 13) {
 		healthAnimationHandler(4, 4);
 	}
-	else if (playerHealth >= 8 || playerHealth <= 12) {
+	else if (playerHealth >= 8 && playerHealth <= 12) {
 		healthAnimationHandler(5, 5);
 	}
-	else if (playerHealth >= 4 || playerHealth <= 8) {
+	else if (playerHealth >= 4 && playerHealth <= 8) {
 		healthAnimationHandler(2, 2);
 	}
-	else if (playerHealth >= 1 || playerHealth <= 3) {
+	else if (playerHealth >= 1 && playerHealth <= 3) {
 		healthAnimationHandler(0, 0);
 	}
 	else {
