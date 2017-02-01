@@ -276,7 +276,7 @@ void MyScene::worldBuild() {
 	ground = 700;
 
 	//health hud
-	healthbar = new Health();
+	healthbar = new Healthbar();
 
 	// create the scene 'tree'
 	// add myentity to this Scene as a child. :))))

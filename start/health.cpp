@@ -1,13 +1,13 @@
 #include "health.h" 
  
-Health::Health(){
+Healthbar::Healthbar(){
 	addSpriteSheet("assets/health.tga", 2, 3);
 }
  
-Health::~Health(){
+Healthbar::~Healthbar(){
 
 }
 
-void Health::update(float deltatime) {
+void Healthbar::update(float deltatime) {
 
 }

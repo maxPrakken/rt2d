@@ -178,7 +178,7 @@ public:
 private:
 	//MyEntity* myentity;
 
-	Health* healthbar;
+	Healthbar* healthbar;
 
 	CoolGuy* MyCoolGuy1;
 

@@ -9,12 +9,12 @@
 #pragma once
 #include "entitymain.h"
 
-class Health:
+class Healthbar:
 		public EntityMain
 {
 public:
-	Health();
-	virtual ~Health();
+	Healthbar();
+	virtual ~Healthbar();
 
 	virtual void update(float deltatime);
 
