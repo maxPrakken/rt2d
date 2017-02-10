@@ -211,6 +211,7 @@ void MyScene::worldBuild() {
 	this->addChild(finishline);
 
 	//all enemies in the world
+	enemySpawn(100, 680);
 	enemySpawn(3550, 680);
 	enemySpawn(3750, 680);
 	enemySpawn(5900, 680);
@@ -754,6 +755,7 @@ void MyScene::enemyMovement(float deltaTime) {
 	for (int i = 0; i < enemyVector.size(); i++) {
 		//stop zone, stops the enemy if he is close enough and starts shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
+		//if(MyCoolGuy1->position.x >= enemyVector[i]->position.x && MyCoolGuy1->position.x + 200 < enemyVector[i]->position.x) {
 			if (Eshooting) {
 				Edriving = false;
 				Eidle = true;
@@ -763,6 +765,7 @@ void MyScene::enemyMovement(float deltaTime) {
 
 		//will make enemy go towards player while shooting
 		if (enemyVector[i]->detectionZone(MyCoolGuy1, 8) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2)) {
+		//if (MyCoolGuy1->position.x + 1600 < enemyVector[i]->position.x &&  MyCoolGuy1->position.x + 200 > enemyVector[i]->position.x) {
 			if (Eshooting) {
 				Eidle = false;
 				Edriving = true;
@@ -782,7 +785,8 @@ void MyScene::enemyMovement(float deltaTime) {
 		}
 
 		//enemy detects player, will move toword player
-		if (enemyVector[i]->detectionZone(MyCoolGuy1, 10) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
+		if (enemyVector[i]->detectionZone(MyCoolGuy1, 14) && !enemyVector[i]->detectionZone(MyCoolGuy1, 2) && !enemyVector[i]->detectionZone(MyCoolGuy1, 8)) {
+		//if(MyCoolGuy1->position.x + 2200 < enemyVector[i]->position.x &&  MyCoolGuy1->position.x + 1600 > enemyVector[i]->position.x) {
 			inShootingRange = false;
 			if (Eshooting) {
 				Eidle = false;

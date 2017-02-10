@@ -5,7 +5,7 @@ Bullet::Bullet() : EntityMain(){
 
 	velocity = Vector2(0, 0);
 
-	gravity = 100;
+	gravity = 150;
 }
  
 Bullet::~Bullet(){

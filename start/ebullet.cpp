@@ -5,7 +5,7 @@ Ebullet::Ebullet(){
 
 	velocity = Vector2(0, 0);
 
-	gravity = 100;
+	gravity = 150;
 }
  
 Ebullet::~Ebullet(){
