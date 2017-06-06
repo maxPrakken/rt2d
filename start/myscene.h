@@ -35,10 +35,18 @@ public:
 
 	int ground;
 	int f;
+
+	/// @brief dynamic background spawning position
+	int backgroundXPos;
+	int backgroundCount = 0;
+
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
 	/// @return void
 	virtual void update(float deltaTime);
+
+	/// @brief lets player more with help of the keyboard
+	void MyScene::playerControlls(float deltaTime);
 
 	/// @brief spawns player bullets
 	void MyScene::bulletspawn();
@@ -102,7 +110,7 @@ public:
 	void MyScene::healthAnimationHandler(int y, int x);
 
 	/// @brief spawns background at set position
-	void MyScene::backgroundSpawn(int xpos);
+	void MyScene::backgroundSpawn();
 
 	/// @brief load the constructor
 	void MyScene::worldBuild();
@@ -169,6 +177,9 @@ public:
 	bool Edrivingshooting;
 	/// @brief boolean to keep animation overwriting in check
 	bool EisFiring;
+
+	/// @brief boolean that checks if the camera is allowed to chase the player
+	bool camCanChase;
 
 	/// @brief checks if player is in shooting range of enemies
 	bool inShootingRange;

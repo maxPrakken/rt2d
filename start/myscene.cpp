@@ -50,37 +50,6 @@ void MyScene::update(float deltaTime)
 					paused = true;
 				}
 
-				//basic movement right
-				if (input()->getKey(GLFW_KEY_D)) {
-					MyCoolGuy1->right(deltaTime);
-					turned = false;
-					semiTurned = false;
-				}
-
-				//basic movement left
-				if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-					MyCoolGuy1->leftR(deltaTime);
-					turned = false;
-					semiTurned = true;
-				}
-
-				if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
-					MyCoolGuy1->left(deltaTime);
-					turned = true;
-					semiTurned = false;
-				}
-
-				//basic player jump
-				if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground ||
-					(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
-					MyCoolGuy1->jump(deltaTime);
-				}
-
-				//player shoot
-				if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
-					bulletspawn();
-				}
-
 				PandEonGround();
 
 				//make bullet come out of correct end of tank
@@ -101,6 +70,7 @@ void MyScene::update(float deltaTime)
 					eXoffset = 85;
 				}
 
+				playerControlls(deltaTime);
 				playerOnPlatform();
 				enemyBulletShootHandler();
 				animationController();
@@ -148,6 +118,8 @@ void MyScene::update(float deltaTime)
 		}
 	}
 	else if (finished == true) {
+		camCanChase = false;
+		MyCoolGuy1->right(deltaTime);
 			PandEonGround();
 			countuptimer.pause();
 			this->addChild(finishText);
@@ -166,6 +138,38 @@ void MyScene::update(float deltaTime)
 		}
 	}
 
+void MyScene::playerControlls(float deltaTime) {
+	//basic movement right
+	if (input()->getKey(GLFW_KEY_D)) {
+		MyCoolGuy1->right(deltaTime);
+		turned = false;
+		semiTurned = false;
+	}
+
+	//basic movement left
+	if (input()->getKey(GLFW_KEY_A) && input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+		MyCoolGuy1->leftR(deltaTime);
+		turned = false;
+		semiTurned = true;
+	}
+
+	if (input()->getKey(GLFW_KEY_A) && !input()->getKey(GLFW_KEY_LEFT_SHIFT)) {
+		MyCoolGuy1->left(deltaTime);
+		turned = true;
+		semiTurned = false;
+	}
+
+	//basic player jump
+	if (input()->getKey(GLFW_KEY_SPACE) && MyCoolGuy1->position.y == ground ||
+		(input()->getKey(GLFW_KEY_SPACE) && onP == true)) {
+		MyCoolGuy1->jump(deltaTime);
+	}
+
+	//player shoot
+	if (input()->getMouseDown(GLFW_MOUSE_BUTTON_1)) {
+		bulletspawn();
+	}
+}
 
 void MyScene::PandEonGround() {
 	//keep player on ground level
@@ -195,11 +199,11 @@ void MyScene::worldBuild() {
 	toSet = 0;
 	
 	//spawns backgrounds
-	backgroundSpawn(0);
-	backgroundSpawn(4096);
-	backgroundSpawn(8192);
-	backgroundSpawn(12288);
-	backgroundSpawn(16384);
+	backgroundSpawn();
+	backgroundSpawn();
+	backgroundSpawn();
+	backgroundSpawn();
+	backgroundSpawn();
 
 	//player initialising and attributes
 	MyCoolGuy1 = new CoolGuy();
@@ -244,6 +248,9 @@ void MyScene::worldBuild() {
 	//camera offset
 	cameraOffset = 300;
 
+	//background position
+	backgroundXPos = 0;
+
 	//camera velocity
 	cameraVelocity = Vector2(0, 0);
 
@@ -254,6 +261,8 @@ void MyScene::worldBuild() {
 	Edrivingshooting = false;
 
 	inShootingRange = false;
+
+	camCanChase = true;
 
 	// start the timer.
 	t.start();
@@ -348,12 +357,13 @@ void MyScene::finishLineCollision() {
 	}
 }
 
-void MyScene::backgroundSpawn(int xpos) {
-		//background initialise
+void MyScene::backgroundSpawn() {
+		backgroundXPos = 4096 * backgroundCount;
 		Background* background1 = new Background();
-		background1->position = Point2(xpos, SHEIGHT / 2);
+		background1->position = Point2(backgroundXPos, SHEIGHT / 2);
 		this->addChild(background1);
 		backgroundVector.push_back(background1);
+		backgroundCount++;
 }
 
 void MyScene::healthAnimationController() {
@@ -386,23 +396,25 @@ void MyScene::healthAnimationHandler(int y, int x) {
 }
 
 void MyScene::cameraController() {
-	if (!turned) {
-		if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset && 
-			camera()->position.x < MyCoolGuy1->position.x + cameraOffset) {
-			cameraVelocity = Vector2(800, 0);
+	if (camCanChase) {
+		if (!turned) {
+			if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset &&
+				camera()->position.x < MyCoolGuy1->position.x + cameraOffset) {
+				cameraVelocity = Vector2(800, 0);
+			}
+			else {
+				cameraVelocity = Vector2(0, 0);
+			}
 		}
-		else {
-			cameraVelocity = Vector2(0, 0);
-		}
-	}
-	
-	if (turned || semiTurned) {
-		if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset &&
-			camera()->position.x > MyCoolGuy1->position.x + cameraOffset) {
-			cameraVelocity = Vector2(-800, 0);
-		}
-		else {
-			cameraVelocity = Vector2(0, 0);
+
+		if (turned || semiTurned) {
+			if (camera()->position.x != MyCoolGuy1->position.x + cameraOffset &&
+				camera()->position.x > MyCoolGuy1->position.x + cameraOffset) {
+				cameraVelocity = Vector2(-800, 0);
+			}
+			else {
+				cameraVelocity = Vector2(0, 0);
+			}
 		}
 	}
 }
